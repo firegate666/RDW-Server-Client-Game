@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="private" author="true" classpath="lib/vecmath.jar;lib/joalmixer.jar;lib/j3dutils.jar;lib/j3dcore.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" source="1.5" sourcefiles="src/HelloJava3Da.java" sourcepath="src" splitindex="true" use="true" version="true">
+            <link href="jar:file:/C:/Documents and Settings/Marco/My Documents/java3d-1_5_1-api-docs.zip!/java3d-1_5_1-api-docs"/>
+            <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+        </javadoc>
+    </target>
+</project>

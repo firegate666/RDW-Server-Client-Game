@@ -1,0 +1,78 @@
+<project name="rdw" default="" basedir=".">
+    <description>
+		Ant tasks for this project
+    </description>
+
+	<target name="init">
+		<!--copy todir="C:\temp\rdw">
+    		<fileset dir="./lib"/>
+		</copy-->
+		<copy todir="C:\temp\rdw">
+    		<fileset dir="./web"/>
+		</copy>
+		<jar 	destfile="C:\temp\rdw\rdw_config.jar"
+				baseDir="config/"/>
+	</target>
+
+	<target name="deploy_startup" depends="server,client">
+		<antcall target="sign"/>
+		<ftp server="firegate.de" userid="web1" password="66igamsm" remotedir="public_html/rdw">
+			<fileset dir="C:\temp\rdw">
+      			<include name="startup.jnlp"/>
+    		</fileset>
+		</ftp>
+	</target>
+
+	<target name="deploy_client" depends="server,client">
+		<antcall target="sign"/>
+		<ftp server="firegate.de" userid="web1" password="66igamsm" remotedir="public_html/rdw">
+			<fileset dir="C:\temp\rdw">
+      			<include name="rdw_client.jar"/>
+    		</fileset>
+		</ftp>
+	</target>
+
+	<target name="deploy_config" depends="server,client">
+		<antcall target="sign"/>
+		<ftp server="firegate.de" userid="web1" password="66igamsm" remotedir="public_html/rdw">
+			<fileset dir="C:\temp\rdw">
+      			<include name="rdw_config.jar"/>
+    		</fileset>
+		</ftp>
+	</target>
+
+	<target name="deploy_all" depends="server,client">
+		<antcall target="sign"/>
+		<ftp server="firegate.de" userid="web1" password="66igamsm" remotedir="public_html/rdw">
+			<fileset dir="C:\temp\rdw">
+      			<include name="*"/>
+    		</fileset>
+		</ftp>
+	</target>
+
+	<target name="sign">
+		<signjar alias="rnp_mbehnke" storepass="passwort" keystore="./keystore">
+			<fileset dir="C:\temp\rdw">
+			    <include name="*.jar"/>
+			</fileset>
+		</signjar>
+	</target>
+	
+	<target name="genkey">
+		<genkey alias="rnp_mbehnke" storepass="passwort" keystore="./keystore" dname="CN=Marco Behnke, OU=Softwaretechnik, O=behnke.biz, C=DE"/>
+	</target>
+	
+	<target name="server" depends="init">
+		<!--jar 	destfile="C:\temp\rdw\rdw_server.jar"
+				baseDir="./bin/"
+				manifest="./MANIFEST_SERVER.MF"/-->
+	</target>
+
+	<target name="client" depends="init">
+		<jar 	destfile="C:\temp\rdw\rdw_client.jar"
+				baseDir="./bin/"
+				manifest="./MANIFEST_CLIENT.MF"
+				excludes="**/resource/**"/>
+	</target>
+
+</project>
