@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * skill
- * 
+ *
  * @author mbehnke
  *
  */
-public class CharacterSkill implements Serializable {
+public class GameCharacterSkill implements Serializable {
 
 }

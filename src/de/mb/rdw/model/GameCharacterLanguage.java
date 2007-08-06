@@ -3,11 +3,11 @@ package de.mb.rdw.model;
 import java.io.Serializable;
 
 /**
- * profession
- * 
+ * language
+ *
  * @author mbehnke
  *
  */
-public class CharacterProfession implements Serializable {
+public class GameCharacterLanguage implements Serializable {
 
 }
