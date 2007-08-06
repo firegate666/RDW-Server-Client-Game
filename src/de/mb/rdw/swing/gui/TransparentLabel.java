@@ -2,8 +2,12 @@ package de.mb.rdw.swing.gui;
 
 import javax.swing.JLabel;
 
-public class TransparentLabel extends JLabel {
+import org.apache.log4j.Logger;
 
+import de.mb.util.Utils;
+
+public class TransparentLabel extends JLabel {
+	final static Logger log = Logger.getLogger(TransparentLabel.class);
 	public TransparentLabel() {
 		super();
 		initialize();

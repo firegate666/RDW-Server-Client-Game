@@ -2,8 +2,12 @@ package de.mb.rdw.swing.gui;
 
 import javax.swing.JButton;
 
-public class TransparentButton extends JButton {
+import org.apache.log4j.Logger;
 
+import de.mb.util.Utils;
+
+public class TransparentButton extends JButton {
+	final static Logger log = Logger.getLogger(TransparentButton.class);
 	public TransparentButton() {
 		super();
 		initialize();

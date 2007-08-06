@@ -8,6 +8,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.apache.log4j.Logger;
+
 import de.mb.util.Utils;
 
 /**
@@ -17,7 +19,7 @@ import de.mb.util.Utils;
  *
  */
 public class ChildMapFrame extends ChildFrame {
-
+	final static Logger log = Logger.getLogger(ChildMapFrame.class);
 	public ChildMapFrame(String title) {
 		super(title, "/resource/images/map.png");
 		setBounds(10, 10, 312, 220);

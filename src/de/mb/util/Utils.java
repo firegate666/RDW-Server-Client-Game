@@ -7,17 +7,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.Calendar;
 
 import org.apache.log4j.Logger;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.exolab.castor.xml.ValidationException;
-
-import de.mb.Wrapper;
 
 /**
  * Some useful methods which can be used anywhere :)

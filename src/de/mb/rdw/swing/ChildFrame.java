@@ -10,6 +10,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
+import org.apache.log4j.Logger;
+
+import de.mb.util.Utils;
+
 /**
  * basic child frame
  * 
@@ -17,7 +21,7 @@ import javax.swing.JPanel;
  * 
  */
 public class ChildFrame extends JInternalFrame {
-	
+	final static Logger log = Logger.getLogger(ChildFrame.class);
 	protected JPanel banner;
 	
 	public ChildFrame(String title, String image_res) {

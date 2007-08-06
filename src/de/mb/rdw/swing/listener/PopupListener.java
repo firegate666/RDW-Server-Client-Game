@@ -5,6 +5,10 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPopupMenu;
 
+import org.apache.log4j.Logger;
+
+import de.mb.util.Utils;
+
 /**
  * Get Popuplistener for popupmenu
  * 
@@ -12,7 +16,7 @@ import javax.swing.JPopupMenu;
  * 
  */
 public class PopupListener extends MouseAdapter {
-
+	final static Logger log = Logger.getLogger(PopupListener.class);
 	JPopupMenu popup;
 
 	/**

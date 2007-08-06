@@ -19,17 +19,14 @@ import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.xml.parsers.FactoryConfigurationError;
 
 import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.ValidationException;
 
-import de.mb.Wrapper;
 import de.mb.rdw.swing.ChildCharacterFrame;
 import de.mb.rdw.swing.ChildHelperFrame;
 import de.mb.rdw.swing.ChildMapFrame;
@@ -37,6 +34,8 @@ import de.mb.rdw.swing.listener.PopupListener;
 import de.mb.util.WebstartFileProvider;
 
 public class RdWClient extends JFrame {
+	
+	final static Logger log = Logger.getLogger(RdWClient.class);
 	private JDesktopPane desk;
 
 	private Image img;

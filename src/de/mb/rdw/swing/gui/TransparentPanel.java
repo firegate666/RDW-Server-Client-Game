@@ -5,8 +5,12 @@ import java.awt.LayoutManager;
 
 import javax.swing.JPanel;
 
-public class TransparentPanel extends JPanel {
+import org.apache.log4j.Logger;
 
+import de.mb.util.Utils;
+
+public class TransparentPanel extends JPanel {
+	final static Logger log = Logger.getLogger(TransparentPanel.class);
 	public TransparentPanel(LayoutManager layout) {
 		super(layout);
 		initialize();
