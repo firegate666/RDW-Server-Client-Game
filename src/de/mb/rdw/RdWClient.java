@@ -20,6 +20,7 @@ import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.xml.parsers.FactoryConfigurationError;
 
@@ -34,7 +35,7 @@ import de.mb.rdw.swing.listener.PopupListener;
 import de.mb.util.WebstartFileProvider;
 
 public class RdWClient extends JFrame {
-	
+
 	final static Logger log = Logger.getLogger(RdWClient.class);
 	private JDesktopPane desk;
 
@@ -139,6 +140,14 @@ public class RdWClient extends JFrame {
 
 		ChildMapFrame child3 = new ChildMapFrame("Map");
 		this.addChild(child3, 300, 300, true);
+
+		JPanel game = new GameEngine();
+		int width = getWidth() * 3/4;
+		int height = getHeight() * 3/4;
+		int x = (getWidth() - width) / 2;
+		int y = (getHeight() - height) / 2;
+		game.setBounds(x, y, width, height);
+		add(game);
 
 		// popup
 		JMenuItem close = new JMenuItem("beenden");
