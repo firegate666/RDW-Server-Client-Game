@@ -13,12 +13,13 @@ import org.apache.log4j.Logger;
 
 /**
  * Some useful methods which can be used anywhere :)
- * 
+ *
  * @author mbehnke
- * 
+ *
  */
 public class Utils {
 	final static Logger log = Logger.getLogger(Utils.class);
+
 	public static String getExtension(File f) {
 		String ext = null;
 		String s = f.getName();
@@ -32,7 +33,7 @@ public class Utils {
 
 	/**
 	 * Write content to file using default encoding UTF-8
-	 * 
+	 *
 	 * @param filename
 	 * @param content
 	 * @return
@@ -43,7 +44,7 @@ public class Utils {
 
 	/**
 	 * read string from file
-	 * 
+	 *
 	 * @param filename
 	 * @return
 	 */
@@ -54,31 +55,48 @@ public class Utils {
 
 	/**
 	 * read string from file
-	 * 
+	 *
 	 * @param f
 	 * @return
 	 */
 	public static String readFromFile(File f) {
 		String result = "";
 		String line = null;
+		FileReader fis = null;
+		BufferedReader dis = null;
 		try {
-			FileReader fis = new FileReader(f);
-			BufferedReader dis = new BufferedReader(fis);
+			fis = new FileReader(f);
+			dis = new BufferedReader(fis);
 			while ((line = dis.readLine()) != null)
 				result += line + "\n";
 		} catch (FileNotFoundException e) {
 			log.error(e);
-			return e.getMessage();
+			result = e.getMessage();
 		} catch (IOException e) {
 			log.error(e);
-			return e.getMessage();
+			result = e.getMessage();
+		} finally {
+			if (dis != null)
+				try {
+					dis.close();
+				} catch (IOException e) {
+					log.error(e);
+					result = e.getMessage();
+				}
+			if (fis != null)
+				try {
+					fis.close();
+				} catch (IOException e) {
+					log.error(e);
+					result = e.getMessage();
+				}
 		}
 		return result;
 	}
 
 	/**
 	 * Write content to file setting character encoding
-	 * 
+	 *
 	 * @param filename
 	 * @param content
 	 * @param encoding
@@ -86,18 +104,34 @@ public class Utils {
 	 */
 	public static boolean writeToFile(String filename, String content,
 			String encoding) {
+		FileOutputStream fos = null;
+		OutputStreamWriter osw = null;
 		try {
-			FileOutputStream fos = new FileOutputStream(filename);
-			OutputStreamWriter osw = new OutputStreamWriter(fos, encoding);
+			fos = new FileOutputStream(filename);
+			osw = new OutputStreamWriter(fos, encoding);
 			osw.write(content);
 			osw.close();
 			fos.close();
 			return true;
 		} catch (FileNotFoundException e) {
-			return false;
+			log.error(e);
 		} catch (IOException e) {
-			return false;
+			log.error(e);
+		} finally {
+			if (osw != null)
+				try {
+					osw.close();
+				} catch (IOException e) {
+					log.error(e);
+				}
+			if (fos != null)
+				try {
+					fos.close();
+				} catch (IOException e) {
+					log.error(e);
+				}
 		}
+		return false;
 	}
 
 	public static boolean chmodToExecutable(String filename) {
@@ -107,13 +141,14 @@ public class Utils {
 			Process proc = Runtime.getRuntime().exec(command);
 			return true;
 		} catch (IOException e) {
+			log.error(e);
 			return false;
 		}
 	}
 
 	/**
 	 * create softlink
-	 * 
+	 *
 	 * @param source
 	 * @param destination
 	 * @return
@@ -124,7 +159,7 @@ public class Utils {
 
 	/**
 	 * create hardlink
-	 * 
+	 *
 	 * @param source
 	 * @param destination
 	 * @return
@@ -135,7 +170,7 @@ public class Utils {
 
 	/**
 	 * create symlink for source
-	 * 
+	 *
 	 * @param source
 	 * @param destination
 	 * @param hardlink
@@ -156,13 +191,14 @@ public class Utils {
 			Process proc = Runtime.getRuntime().exec(command);
 			return true;
 		} catch (IOException e) {
+			log.error(e);
 			return false;
 		}
 	}
 
 	/**
 	 * Extend number with leading zeroes
-	 * 
+	 *
 	 * @param value
 	 *            number
 	 * @param digits
@@ -179,7 +215,7 @@ public class Utils {
 
 	/**
 	 * return timestamp for local time as YY-MM-DD HH:MM:SS
-	 * 
+	 *
 	 * @return timestamp
 	 */
 	public static String getTimestamp() {
