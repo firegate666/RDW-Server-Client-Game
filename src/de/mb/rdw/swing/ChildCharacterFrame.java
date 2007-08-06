@@ -3,59 +3,91 @@ package de.mb.rdw.swing;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
+import org.exolab.castor.xml.MarshalException;
+import org.exolab.castor.xml.ValidationException;
 
-import de.mb.rdw.swing.gui.TransparentComboBox;
+import de.mb.rdw.model.GameCharacter;
+import de.mb.rdw.model.GameCharacterType;
+import de.mb.rdw.swing.gui.TransparentAttributeComboBox;
+import de.mb.rdw.swing.gui.TransparentAttributeTextField;
+import de.mb.rdw.swing.gui.TransparentButton;
 import de.mb.rdw.swing.gui.TransparentLabel;
 import de.mb.rdw.swing.gui.TransparentPanel;
-import de.mb.rdw.swing.gui.TransparentTextField;
+import de.mb.util.Utils;
 
-public class ChildCharacterFrame extends ChildFrame {
+public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 	final static Logger log = Logger.getLogger(ChildCharacterFrame.class);
 
-	protected Character character;
-	protected JPanel mainpanel;
+	protected GameCharacter character = new GameCharacter();
+
+	protected JPanel mainpanel = new TransparentPanel();
 
 	protected JPanel[] container;
+
+	protected String basetitle;
+
 	protected int act_container = 0;
 
 	public ChildCharacterFrame(String title) {
+		this(title, false);
+	}
+
+	public ChildCharacterFrame(String title, boolean iconifiable) {
 		super(title);
-
+		basetitle = title;
 		banner.setLayout(null);
-		setIconifiable(false);
+		setIconifiable(iconifiable);
 		setClosable(true);
+		initPanels();
+	}
 
-		mainpanel = new TransparentPanel();
-		mainpanel.setBounds(50, 50, getWidth()-100, getHeight()-100);
+	protected void initPanels() {
+		if (!character.getAttribute("name").equalsIgnoreCase(""))
+			setTitle(character.getAttribute("name"));
+		else
+			setTitle(basetitle);
+		mainpanel.removeAll();
+		mainpanel.setBounds(50, 50, getWidth() - 100, getHeight() - 100);
 		mainpanel.setLayout(new BorderLayout());
 		addComp(mainpanel, BorderLayout.CENTER);
 
 		mainpanel.add(getTopPanel(), BorderLayout.NORTH);
 		mainpanel.add(getBottomPanel(), BorderLayout.SOUTH);
 
+		// act_container = 0;
 		container = new JPanel[4];
 		container[0] = getDataPanel();
 		container[1] = getAttributePanel();
 		container[2] = getMagicPanel();
 		container[3] = getExperiencePanel();
 		mainpanel.add(container[act_container], BorderLayout.CENTER);
+		mainpanel.updateUI();
 	}
 
 	public JPanel getTopPanel() {
 		TransparentPanel panel = new TransparentPanel(new GridLayout(2, 2));
 
 		TransparentLabel label_name = new TransparentLabel("Name:");
-		TransparentTextField text_name = new TransparentTextField();
+		TransparentAttributeTextField text_name = new TransparentAttributeTextField(
+				character, "name", -1, JTextField.LEFT);
 		TransparentLabel label_type = new TransparentLabel("Typus:");
-		TransparentComboBox text_type = new TransparentComboBox(new String[]{"Krieger", "Magier"});
+		TransparentAttributeComboBox text_type = new TransparentAttributeComboBox(
+				GameCharacterType.getAvailableCharacters(character), character,
+				"type");
 
 		panel.add(label_name);
 		panel.add(text_name);
@@ -67,7 +99,7 @@ public class ChildCharacterFrame extends ChildFrame {
 
 	/**
 	 * switch panels
-	 * 
+	 *
 	 * @param forward
 	 */
 	protected void switchPanel(boolean forward) {
@@ -88,76 +120,38 @@ public class ChildCharacterFrame extends ChildFrame {
 	}
 
 	public JPanel getBottomPanel() {
-		TransparentPanel panel = new TransparentPanel(new GridLayout(1, 2));
+		TransparentPanel panel = new TransparentPanel(new GridLayout(1, 5));
 
-		TransparentLabel prev = new TransparentLabel();
+		TransparentButton prev = new TransparentButton();
 		prev.setHorizontalAlignment(JLabel.LEFT);
 		prev.setVerticalAlignment(JLabel.CENTER);
-		prev.setIcon(new ImageIcon(getClass().getResource("/resource/images/prev.png")));
-		prev.addMouseListener(new MouseListener() {
+		prev.setIcon(new ImageIcon(getClass().getResource(
+				"/resource/images/prev.png")));
+		prev.setActionCommand("PREV");
+		prev.addActionListener(this);
 
-			public void mouseClicked(MouseEvent e) {
-				log.info("prev clicked");
-				switchPanel(false);
-
-			}
-
-			public void mouseEntered(MouseEvent e) {
-				// TODO Automatisch erstellter Methoden-Stub
-
-			}
-
-			public void mouseExited(MouseEvent e) {
-				// TODO Automatisch erstellter Methoden-Stub
-
-			}
-
-			public void mousePressed(MouseEvent e) {
-				// TODO Automatisch erstellter Methoden-Stub
-
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				// TODO Automatisch erstellter Methoden-Stub
-
-			}
-
-		});
-		TransparentLabel next = new TransparentLabel();
+		TransparentButton next = new TransparentButton();
 		next.setHorizontalAlignment(JLabel.RIGHT);
 		next.setVerticalAlignment(JLabel.CENTER);
-		next.setIcon(new ImageIcon(getClass().getResource("/resource/images/next.png")));
-		next.addMouseListener(new MouseListener() {
+		next.setIcon(new ImageIcon(getClass().getResource(
+				"/resource/images/next.png")));
+		next.setActionCommand("NEXT");
+		next.addActionListener(this);
 
-			public void mouseClicked(MouseEvent e) {
-				log.info("next clicked");
-				switchPanel(true);
-
-			}
-
-			public void mouseEntered(MouseEvent e) {
-				// TODO Automatisch erstellter Methoden-Stub
-
-			}
-
-			public void mouseExited(MouseEvent e) {
-				// TODO Automatisch erstellter Methoden-Stub
-
-			}
-
-			public void mousePressed(MouseEvent e) {
-				// TODO Automatisch erstellter Methoden-Stub
-
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				// TODO Automatisch erstellter Methoden-Stub
-
-			}
-
-		});
+		JButton load = new JButton("Load");
+		load.setActionCommand("LOAD");
+		load.addActionListener(this);
+		JButton clear = new JButton("New");
+		clear.setActionCommand("CLEAR");
+		clear.addActionListener(this);
+		JButton save = new JButton("Save");
+		save.setActionCommand("SAVE");
+		save.addActionListener(this);
 
 		panel.add(prev);
+		panel.add(clear);
+		panel.add(load);
+		panel.add(save);
 		panel.add(next);
 
 		return panel;
@@ -174,28 +168,32 @@ public class ChildCharacterFrame extends ChildFrame {
 		TransparentLabel label_level_w = new TransparentLabel("Weisheit");
 
 		TransparentLabel label_level = new TransparentLabel("Stufe:");
-		TransparentTextField text_level_k = new TransparentTextField("1");
-		TransparentTextField text_level_w = new TransparentTextField("1");
+		TransparentAttributeTextField text_level_k = new TransparentAttributeTextField(
+				character, "level_k", 2);
+		TransparentAttributeTextField text_level_w = new TransparentAttributeTextField(
+				character, "level_w", 2);
 
 		TransparentLabel label_xp = new TransparentLabel("Erfahrung:");
-		TransparentTextField text_kep = new TransparentTextField("0");
-		TransparentTextField text_Wep = new TransparentTextField("0");
+		TransparentAttributeTextField text_kep = new TransparentAttributeTextField(
+				character, "kep", 2);
+		TransparentAttributeTextField text_Wep = new TransparentAttributeTextField(
+				character, "wep", 2);
 
-		int x = 0; 
+		int x = 0;
 		int y = 50;
-		panel.add(label_level_k, x+100, y+10, 50, 23);
-		panel.add(label_level_w, x+165, y+10, 70, 23);
+		panel.add(label_level_k, x + 100, y + 10, 50, 23);
+		panel.add(label_level_w, x + 165, y + 10, 70, 23);
 
-		panel.add(label_level, x+10, y+40, 100, 23);
-		panel.add(text_level_k, x+100, y+40, 23, 23);
-		panel.add(text_level_w, x+165, y+40, 23, 23);
+		panel.add(label_level, x + 10, y + 40, 100, 23);
+		panel.add(text_level_k, x + 127, y + 40, 23, 23);
+		panel.add(text_level_w, x + 192, y + 40, 23, 23);
 
-		panel.add(label_xp, x+10, y+70, 100, 23);
-		panel.add(text_kep, x+100, y+70, 50, 23);
-		panel.add(text_Wep, x+165, y+70, 50, 23);
+		panel.add(label_xp, x + 10, y + 70, 100, 23);
+		panel.add(text_kep, x + 100, y + 70, 50, 23);
+		panel.add(text_Wep, x + 165, y + 70, 50, 23);
 		return panel;
 	}
-	
+
 	public JPanel getMagicPanel() {
 		TransparentPanel panel = new TransparentPanel(null);
 
@@ -203,14 +201,14 @@ public class ChildCharacterFrame extends ChildFrame {
 		header.setFont(new Font("Verdana", Font.BOLD, 16));
 		panel.add(header, 10, 10, 300, 50);
 
-/*		TransparentLabel label_titel = new TransparentLabel("Titel:");
-		TransparentTextField text_titel = new TransparentTextField();
-
-		int x = 0; 
-		int y = 50;
-		panel.add(label_titel, x+10, y+10, 100, 23);
-		panel.add(text_titel, x+90, y+10, 100, 23);
-*/
+		/*
+		 * TransparentLabel label_titel = new TransparentLabel("Titel:");
+		 * TransparentAttributeTextField text_titel = new
+		 * TransparentAttributeTextField();
+		 *
+		 * int x = 0; int y = 50; panel.add(label_titel, x+10, y+10, 100, 23);
+		 * panel.add(text_titel, x+90, y+10, 100, 23);
+		 */
 		return panel;
 	}
 
@@ -222,12 +220,13 @@ public class ChildCharacterFrame extends ChildFrame {
 		panel.add(header, 10, 10, 300, 50);
 
 		TransparentLabel label_titel = new TransparentLabel("Titel:");
-		TransparentTextField text_titel = new TransparentTextField();
+		TransparentAttributeTextField text_titel = new TransparentAttributeTextField(
+				character, "titel", -1, JTextField.LEFT);
 
-		int x = 0; 
+		int x = 0;
 		int y = 50;
-		panel.add(label_titel, x+10, y+10, 100, 23);
-		panel.add(text_titel, x+90, y+10, 100, 23);
+		panel.add(label_titel, x + 10, y + 10, 100, 23);
+		panel.add(text_titel, x + 90, y + 10, 100, 23);
 
 		return panel;
 	}
@@ -238,64 +237,137 @@ public class ChildCharacterFrame extends ChildFrame {
 		TransparentLabel header = new TransparentLabel("Attribute");
 		header.setFont(new Font("Verdana", Font.BOLD, 16));
 		panel.add(header, 10, 10, 300, 50);
-		
-		TransparentLabel label_auss = new TransparentLabel("Aussehen:");
-		TransparentTextField text_auss = new TransparentTextField();
-		TransparentLabel label_kl = new TransparentLabel("Klugheit:");
-		TransparentTextField text_kl = new TransparentTextField();
-		TransparentLabel label_wei = new TransparentLabel("Weisheit:");
-		TransparentTextField text_wei = new TransparentTextField();
-		TransparentLabel label_tak = new TransparentLabel("Tapferkeit:");
-		TransparentTextField text_tak = new TransparentTextField();
-		TransparentLabel label_ausd = new TransparentLabel("Ausdauer:");
-		TransparentTextField text_ausd = new TransparentTextField();
-		TransparentLabel label_kk = new TransparentLabel("Körperkraft:");
-		TransparentTextField text_kk = new TransparentTextField();
-		TransparentLabel label_ge = new TransparentLabel("Gewandheit:");
-		TransparentTextField text_ge = new TransparentTextField();
 
-		int x = 0; 
+		TransparentLabel label_auss = new TransparentLabel("Aussehen:");
+		TransparentAttributeTextField text_auss = new TransparentAttributeTextField(
+				character, "auss", 2);
+		TransparentLabel label_kl = new TransparentLabel("Klugheit:");
+		TransparentAttributeTextField text_kl = new TransparentAttributeTextField(
+				character, "kl", 2);
+		TransparentLabel label_wei = new TransparentLabel("Weisheit:");
+		TransparentAttributeTextField text_wei = new TransparentAttributeTextField(
+				character, "wei", 2);
+		TransparentLabel label_tak = new TransparentLabel("Tapferkeit:");
+		TransparentAttributeTextField text_tak = new TransparentAttributeTextField(
+				character, "tak", 2);
+		TransparentLabel label_ausd = new TransparentLabel("Ausdauer:");
+		TransparentAttributeTextField text_ausd = new TransparentAttributeTextField(
+				character, "ausd", 2);
+		TransparentLabel label_kk = new TransparentLabel("Körperkraft:");
+		TransparentAttributeTextField text_kk = new TransparentAttributeTextField(
+				character, "kk", 2);
+		TransparentLabel label_ge = new TransparentLabel("Gewandheit:");
+		TransparentAttributeTextField text_ge = new TransparentAttributeTextField(
+				character, "ge", 2);
+
+		int x = 0;
 		int y = 50;
-		
-		panel.add(label_auss, x+10, y+10, 100, 23);
-		panel.add(text_auss, x+90, y+10, 23, 23);
-		panel.add(label_kl, x+10, y+40, 100, 23);
-		panel.add(text_kl, x+90, y+40, 23, 23);
-		panel.add(label_wei, x+10, y+70, 100, 23);
-		panel.add(text_wei, x+90, y+70, 23, 23);
-		panel.add(label_tak, x+10, y+100, 100, 23);
-		panel.add(text_tak, x+90, y+100, 23, 23);
-		panel.add(label_ausd, x+10, y+130, 100, 23);
-		panel.add(text_ausd, x+90, y+130, 23, 23);
-		panel.add(label_kk, x+10, y+160, 100, 23);
-		panel.add(text_kk, x+90, y+160, 23, 23);
-		panel.add(label_ge, x+10, y+190, 100, 23);
-		panel.add(text_ge, x+90, y+190, 23, 23);
+
+		panel.add(label_auss, x + 10, y + 10, 100, 23);
+		panel.add(text_auss, x + 90, y + 10, 23, 23);
+		panel.add(label_kl, x + 10, y + 40, 100, 23);
+		panel.add(text_kl, x + 90, y + 40, 23, 23);
+		panel.add(label_wei, x + 10, y + 70, 100, 23);
+		panel.add(text_wei, x + 90, y + 70, 23, 23);
+		panel.add(label_tak, x + 10, y + 100, 100, 23);
+		panel.add(text_tak, x + 90, y + 100, 23, 23);
+		panel.add(label_ausd, x + 10, y + 130, 100, 23);
+		panel.add(text_ausd, x + 90, y + 130, 23, 23);
+		panel.add(label_kk, x + 10, y + 160, 100, 23);
+		panel.add(text_kk, x + 90, y + 160, 23, 23);
+		panel.add(label_ge, x + 10, y + 190, 100, 23);
+		panel.add(text_ge, x + 90, y + 190, 23, 23);
 
 		TransparentLabel label_st = new TransparentLabel("Standhaftigkeit:");
-		TransparentTextField text_st = new TransparentTextField();
+		TransparentAttributeTextField text_st = new TransparentAttributeTextField(
+				character, "st", 2);
 		TransparentLabel label_ins = new TransparentLabel("Instinkt:");
-		TransparentTextField text_ins = new TransparentTextField();
+		TransparentAttributeTextField text_ins = new TransparentAttributeTextField(
+				character, "ins", 2);
 		TransparentLabel label_pg = new TransparentLabel("Psy. Gesundheit:");
-		TransparentTextField text_pg = new TransparentTextField();
+		TransparentAttributeTextField text_pg = new TransparentAttributeTextField(
+				character, "pg", 2);
 		TransparentLabel label_if = new TransparentLabel("Immunitätsfaktor:");
-		TransparentTextField text_if = new TransparentTextField();
-		TransparentLabel label_kf = new TransparentLabel("Konzentrationsfaktor:");
-		TransparentTextField text_kf = new TransparentTextField();
+		TransparentAttributeTextField text_if = new TransparentAttributeTextField(
+				character, "if", 2);
+		TransparentLabel label_kf = new TransparentLabel(
+				"Konzentrationsfaktor:");
+		TransparentAttributeTextField text_kf = new TransparentAttributeTextField(
+				character, "kf", 2);
 
-		panel.add(label_st, x+130, y+10, 140, 23);
-		panel.add(text_st, x+260, y+10, 23, 23);
-		panel.add(label_ins, x+130, y+40, 140, 23);
-		panel.add(text_ins, x+260, y+40, 23, 23);
-		panel.add(label_pg, x+130, y+70, 140, 23);
-		panel.add(text_pg, x+260, y+70, 23, 23);
-		panel.add(label_if, x+130, y+100, 140, 23);
-		panel.add(text_if, x+260, y+100, 23, 23);
-		panel.add(label_kf, x+130, y+130, 140, 23);
-		panel.add(text_kf, x+260, y+130, 23, 23);
+		panel.add(label_st, x + 130, y + 10, 140, 23);
+		panel.add(text_st, x + 260, y + 10, 23, 23);
+		panel.add(label_ins, x + 130, y + 40, 140, 23);
+		panel.add(text_ins, x + 260, y + 40, 23, 23);
+		panel.add(label_pg, x + 130, y + 70, 140, 23);
+		panel.add(text_pg, x + 250, y + 70, 33, 23);
+		panel.add(label_if, x + 130, y + 100, 140, 23);
+		panel.add(text_if, x + 260, y + 100, 23, 23);
+		panel.add(label_kf, x + 130, y + 130, 140, 23);
+		panel.add(text_kf, x + 260, y + 130, 23, 23);
 
 		return panel;
 	}
 
+	protected String[] getCharacterList() {
+		File dir = new File("./");
+		File[] filelist = dir.listFiles(new FilenameFilter() {
+
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".chr");
+			}
+
+		});
+		ArrayList list = new ArrayList();
+		for (int i = 0; i < filelist.length; i++) {
+			String temp = filelist[i].getName().replaceAll("\\.chr", "");
+			if (!temp.equalsIgnoreCase("") && filelist[i].isFile())
+				list.add(temp);
+		}
+		String[] result = new String[list.size()];
+		list.toArray(result);
+		return result;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand().equalsIgnoreCase("PREV")) {
+			switchPanel(false);
+		} else if (e.getActionCommand().equalsIgnoreCase("NEXT")) {
+			switchPanel(true);
+		} else if (e.getActionCommand().equalsIgnoreCase("CLEAR")) {
+			character = new GameCharacter();
+			initPanels();
+		} else if (e.getActionCommand().equalsIgnoreCase("LOAD")) {
+			String[] list = getCharacterList();
+			if (list.length == 0)
+				return;
+			String s = (String) JOptionPane.showInputDialog(this,
+					"Wähle Deinen Charakter", "Name: ",
+					JOptionPane.QUESTION_MESSAGE, null, list, list[0]);
+			String xml = Utils.readFromFile(s + ".chr");
+			try {
+				character = GameCharacter.getFromXml(xml);
+				initPanels();
+			} catch (MarshalException e1) {
+				log.error(e1);
+			} catch (ValidationException e1) {
+				log.error(e1);
+			}
+		} else if (e.getActionCommand().equalsIgnoreCase("SAVE")) {
+			if (character.getAttribute("name").equalsIgnoreCase(""))
+				return;
+			try {
+				String xml = character.writeToXml();
+				Utils.writeToFile(character.getAttribute("name") + ".chr", xml);
+				initPanels();
+			} catch (MarshalException e1) {
+				log.error(e1);
+			} catch (ValidationException e1) {
+				log.error(e1);
+			}
+		} else
+			log.warn("unknown action command");
+
+	}
 
 }
