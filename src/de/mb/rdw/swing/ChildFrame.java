@@ -11,6 +11,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
 /**
+ * basic child frame
  * 
  * @author Marco
  * 

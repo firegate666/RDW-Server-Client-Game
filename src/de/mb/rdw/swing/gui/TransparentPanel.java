@@ -21,6 +21,15 @@ public class TransparentPanel extends JPanel {
 		setOpaque(false);
 	}
 
+	/**
+	 * add component and set component bounds
+	 * 
+	 * @param comp
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 */
 	public void add(Component comp, int x, int y, int width, int height) {
 		comp.setBounds(x, y, width, height);
 		add(comp);

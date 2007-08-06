@@ -1,5 +1,11 @@
 package de.mb.rdw.model.items;
 
+/**
+ * ranged weapon
+ * 
+ * @author mbehnke
+ *
+ */
 public class ItemRangedWeapon extends ItemAbstractWeapon {
 
 	protected int range;

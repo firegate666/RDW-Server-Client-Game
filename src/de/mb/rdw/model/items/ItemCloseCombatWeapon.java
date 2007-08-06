@@ -2,6 +2,12 @@ package de.mb.rdw.model.items;
 
 import de.mb.rdw.model.exceptions.IllegalTypeException;
 
+/**
+ * close combat weapon
+ * 
+ * @author mbehnke
+ *
+ */
 public class ItemCloseCombatWeapon extends ItemAbstractWeapon {
 
 	public static final int TYPE_SW = 1;

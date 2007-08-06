@@ -65,23 +65,24 @@ public class ChildCharacterFrame extends ChildFrame {
 		return panel;
 	}
 
+	/**
+	 * switch panels
+	 * 
+	 * @param forward
+	 */
 	protected void switchPanel(boolean forward) {
-		log.info("Remove old panel "+act_container);
 		mainpanel.remove(container[act_container]);
 		if (forward) {
-			log.info("next panel");
 			if (act_container < (container.length - 1))
 				act_container++;
 			else
 				act_container = 0;
 		} else {
-			log.info("prev panel");
 			if (act_container > 0)
 				act_container--;
 			else
 				act_container = container.length - 1;
 		}
-		log.info("Insert new panel "+act_container);
 		mainpanel.add(container[act_container], BorderLayout.CENTER);
 		mainpanel.updateUI();
 	}

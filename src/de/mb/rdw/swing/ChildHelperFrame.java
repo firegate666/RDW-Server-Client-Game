@@ -8,6 +8,11 @@ import org.apache.log4j.Logger;
 
 import de.mb.rdw.HelpProperties;
 
+/**
+ * help view
+ * @author mbehnke
+ *
+ */
 public class ChildHelperFrame extends ChildFrame {
 	final static Logger log = Logger.getLogger(ChildHelperFrame.class);
 	public ChildHelperFrame(String title) {

@@ -1,5 +1,11 @@
 package de.mb.rdw.model.items;
 
+/**
+ * helm
+ * 
+ * @author mbehnke
+ *
+ */
 public class ItemHelm extends Item {
 
 	protected int sf;

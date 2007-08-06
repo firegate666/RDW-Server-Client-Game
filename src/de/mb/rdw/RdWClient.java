@@ -1,8 +1,10 @@
 package de.mb.rdw;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
@@ -39,7 +41,7 @@ public class RdWClient extends JFrame {
 
 	private Image img;
 
-	JPopupMenu popup = new JPopupMenu();
+	protected JPopupMenu popup = new JPopupMenu();
 
 	public RdWClient() {
 		img = new ImageIcon(getClass().getResource("/resource/images/background.jpg")).getImage();
@@ -84,6 +86,8 @@ public class RdWClient extends JFrame {
 		this.setVisible(false);
 		this.setAlwaysOnTop(false);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setBounds(0, 0, screenSize.width, screenSize.height);
 		this.setUndecorated(true);
 		this.setResizable(false);
 		this.setVisible(true);

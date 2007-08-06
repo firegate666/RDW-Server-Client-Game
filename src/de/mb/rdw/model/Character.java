@@ -2,6 +2,12 @@ package de.mb.rdw.model;
 
 import java.io.Serializable;
 
+/**
+ * basic character
+ * 
+ * @author mbehnke
+ *
+ */
 public class Character implements Serializable {
 
 	public static final int FIGURE_NORMAL = 1;

@@ -2,6 +2,12 @@ package de.mb.rdw.model.items;
 
 import de.mb.rdw.model.exceptions.IllegalTypeException;
 
+/**
+ * armor
+ * 
+ * @author mbehnke
+ *
+ */
 public class ItemArmor extends ItemHelm {
 	public static final int TYPE_NK = 1;
 

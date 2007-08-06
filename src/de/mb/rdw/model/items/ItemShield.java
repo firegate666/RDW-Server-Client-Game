@@ -2,6 +2,12 @@ package de.mb.rdw.model.items;
 
 import de.mb.rdw.model.exceptions.IllegalTypeException;
 
+/**
+ * shield
+ * 
+ * @author mbehnke
+ *
+ */
 public class ItemShield extends Item {
 	public static final int TYPE_IRON = 1;
 

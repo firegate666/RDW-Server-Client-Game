@@ -10,6 +10,12 @@ import javax.swing.JPanel;
 
 import de.mb.util.Utils;
 
+/**
+ * map view
+ * 
+ * @author mbehnke
+ *
+ */
 public class ChildMapFrame extends ChildFrame {
 
 	public ChildMapFrame(String title) {
