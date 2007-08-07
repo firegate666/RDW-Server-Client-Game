@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,6 +25,7 @@ import org.exolab.castor.xml.ValidationException;
 
 import de.mb.rdw.model.GameCharacter;
 import de.mb.rdw.model.GameCharacterType;
+import de.mb.rdw.model.items.Item;
 import de.mb.rdw.swing.implementations.TransparentAttributeComboBox;
 import de.mb.rdw.swing.implementations.TransparentAttributeTextArea;
 import de.mb.rdw.swing.implementations.TransparentAttributeTextField;
@@ -70,12 +70,9 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		mainpanel.add(getTopPanel(), BorderLayout.NORTH);
 		mainpanel.add(getBottomPanel(), BorderLayout.SOUTH);
 
-		// act_container = 0;
-		container = new JPanel[4];
-		container[0] = getDataPanel();
-		container[1] = getAttributePanel();
-		container[2] = getMagicPanel();
-		container[3] = getExperiencePanel();
+		int i = 0;
+		container = new JPanel[] { getDataPanel(), getAttributePanel(),
+				getMagicPanel(), getEquipmentPanel(), getExperiencePanel(), };
 		mainpanel.add(container[act_container], BorderLayout.CENTER);
 		mainpanel.updateUI();
 	}
@@ -162,15 +159,21 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		next.setActionCommand("NEXT");
 		next.addActionListener(this);
 
-		JButton load = new JButton("Load");
+		TransparentButton load = new TransparentButton();
 		load.setActionCommand("LOAD");
 		load.addActionListener(this);
-		JButton clear = new JButton("New");
+		load.setIcon(new ImageIcon(getClass().getResource(
+				"/resource/images/load.gif")));
+		TransparentButton clear = new TransparentButton();
 		clear.setActionCommand("CLEAR");
 		clear.addActionListener(this);
-		JButton save = new JButton("Save");
+		clear.setIcon(new ImageIcon(getClass().getResource(
+				"/resource/images/create.gif")));
+		TransparentButton save = new TransparentButton();
 		save.setActionCommand("SAVE");
 		save.addActionListener(this);
+		save.setIcon(new ImageIcon(getClass().getResource(
+				"/resource/images/save.gif")));
 
 		panel.add(prev);
 		panel.add(clear);
@@ -225,14 +228,27 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		header.setFont(new Font("Verdana", Font.BOLD, 16));
 		panel.add(header, 10, 10, 300, 50);
 
-		/*
-		 * TransparentLabel label_titel = new TransparentLabel("Titel:");
-		 * TransparentAttributeTextField text_titel = new
-		 * TransparentAttributeTextField();
-		 *
-		 * int x = 0; int y = 50; panel.add(label_titel, x+10, y+10, 100, 23);
-		 * panel.add(text_titel, x+90, y+10, 100, 23);
-		 */
+		return panel;
+	}
+
+	public JPanel getEquipmentPanel() {
+		TransparentPanel panel = new TransparentPanel(null);
+
+		TransparentLabel header = new TransparentLabel("Ausrüstung");
+		header.setFont(new Font("Verdana", Font.BOLD, 16));
+		panel.add(header, 10, 10, 300, 50);
+
+		TransparentList text_equipment = new TransparentList(Item.getList());
+		TransparentButton button_add = new TransparentButton();
+		button_add.setIcon(new ImageIcon(getClass().getResource(
+				"/resource/images/add.gif")));
+		button_add.setToolTipText("Ausrüstungsgegenstand hinzufügen");
+
+		int x = 0;
+		int y = 50;
+		panel.add(text_equipment.getScrollPane(), x + 10, y + 10, 280, 280);
+		panel.add(button_add, x + 125, y + 295, 40, 40);
+
 		return panel;
 	}
 
@@ -277,7 +293,8 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		text_image.setBorder(BorderFactory.createEtchedBorder());
 
 		TransparentLabel label_notes = new TransparentLabel("Sonstiges");
-		TransparentAttributeTextArea text_notes = new TransparentAttributeTextArea(character, "notes");
+		TransparentAttributeTextArea text_notes = new TransparentAttributeTextArea(
+				character, "notes");
 
 		int x = 0;
 		int y = 50;
@@ -401,7 +418,7 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 			}
 
 		});
-		ArrayList <String> list = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<String>();
 		for (int i = 0; i < filelist.length; i++) {
 			String temp = filelist[i].getName().replaceAll("\\.chr", "");
 			if (!temp.equalsIgnoreCase("") && filelist[i].isFile())
@@ -441,7 +458,8 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 				return;
 			try {
 				String xml = character.writeToXml();
-				Utils.writeToFile(character.getAttribute("name") + ".chr", xml, "ISO-8859-1");
+				Utils.writeToFile(character.getAttribute("name") + ".chr", xml,
+						"ISO-8859-1");
 				initPanels();
 			} catch (MarshalException e1) {
 				log.error(e1);
