@@ -26,15 +26,17 @@ public class TransparentTextArea extends JTextArea {
 	protected void initialize() {
 		setOpaque(false);
 		scrollPane = new JScrollPane();
-
-		setLineWrap(true);
-		setWrapStyleWord(true); // only wrap word if line wrap
-		setBorder(new EtchedBorder());
+		scrollPane.setOpaque(false);
+		scrollPane.getViewport().setOpaque(false);
 		scrollPane.getViewport().setView(this);
 		scrollPane
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scrollPane
 				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+		setLineWrap(true);
+		setWrapStyleWord(true); // only wrap word if line wrap
+		setBorder(new EtchedBorder());
 		setCaretPosition(0);
 	}
 
