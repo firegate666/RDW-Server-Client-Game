@@ -14,11 +14,10 @@
 				baseDir="config/"/>
 	</target>
 
-	<target name="deploy_startup" depends="server,client">
-		<antcall target="sign"/>
+	<target name="deploy_startup">
 		<ftp server="firegate.de" userid="web1" password="66igamsm" remotedir="public_html/rdw">
 			<fileset dir="C:\temp\rdw">
-      			<include name="startup.jnlp"/>
+      			<include name="*.jnlp"/>
     		</fileset>
 		</ftp>
 	</target>
@@ -28,6 +27,15 @@
 		<ftp server="firegate.de" userid="web1" password="66igamsm" remotedir="public_html/rdw">
 			<fileset dir="C:\temp\rdw">
       			<include name="rdw_client.jar"/>
+    		</fileset>
+		</ftp>
+	</target>
+
+	<target name="deploy_simple_client" depends="simple_client">
+		<antcall target="sign"/>
+		<ftp server="firegate.de" userid="web1" password="66igamsm" remotedir="public_html/rdw">
+			<fileset dir="C:\temp\rdw">
+      			<include name="rdw_simple_client.jar"/>
     		</fileset>
 		</ftp>
 	</target>
@@ -57,11 +65,11 @@
 			</fileset>
 		</signjar>
 	</target>
-	
+
 	<target name="genkey">
 		<genkey alias="rnp_mbehnke" storepass="passwort" keystore="./keystore" dname="CN=Marco Behnke, OU=Softwaretechnik, O=behnke.biz, C=DE"/>
 	</target>
-	
+
 	<target name="server" depends="init">
 		<!--jar 	destfile="C:\temp\rdw\rdw_server.jar"
 				baseDir="./bin/"
@@ -75,4 +83,10 @@
 				excludes="**/resource/**"/>
 	</target>
 
+	<target name="simple_client" depends="init">
+		<jar 	destfile="C:\temp\rdw\rdw_simple_client.jar"
+				baseDir="./bin/"
+				manifest="./MANIFEST_SIMPLE_CLIENT.MF"
+				excludes="**/resource/**"/>
+	</target>
 </project>
