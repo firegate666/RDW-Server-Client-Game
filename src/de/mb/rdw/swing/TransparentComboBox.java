@@ -1,4 +1,4 @@
-package de.mb.rdw.swing.gui;
+package de.mb.rdw.swing;
 
 import javax.swing.JComboBox;
 

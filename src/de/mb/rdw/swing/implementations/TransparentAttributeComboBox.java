@@ -1,4 +1,4 @@
-package de.mb.rdw.swing.gui;
+package de.mb.rdw.swing.implementations;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -6,8 +6,10 @@ import java.awt.event.ItemListener;
 import org.apache.log4j.Logger;
 
 import de.mb.rdw.model.GameCharacter;
+import de.mb.rdw.swing.TransparentComboBox;
+import de.mb.rdw.swing.interfaces.ICharacterAttributeComponent;
 
-public class TransparentAttributeComboBox extends TransparentComboBox {
+public class TransparentAttributeComboBox extends TransparentComboBox implements ICharacterAttributeComponent {
 	final static Logger log = Logger
 			.getLogger(TransparentAttributeComboBox.class);
 

@@ -1,4 +1,4 @@
-package de.mb.rdw.swing.gui;
+package de.mb.rdw.swing.implementations;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -8,8 +8,10 @@ import javax.swing.JTextField;
 import org.apache.log4j.Logger;
 
 import de.mb.rdw.model.GameCharacter;
+import de.mb.rdw.swing.TransparentTextField;
+import de.mb.rdw.swing.interfaces.ICharacterAttributeComponent;
 
-public class TransparentAttributeTextField extends TransparentTextField {
+public class TransparentAttributeTextField extends TransparentTextField implements ICharacterAttributeComponent {
 	final static Logger log = Logger
 			.getLogger(TransparentAttributeTextField.class);
 

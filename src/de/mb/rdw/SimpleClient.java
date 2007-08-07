@@ -1,15 +1,12 @@
 package de.mb.rdw;
 
-import hellojava3D.HelloJava3Dd;
-
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Toolkit;
+import java.awt.Menu;
+import java.awt.MenuBar;
+import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -21,9 +18,6 @@ import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.xml.parsers.FactoryConfigurationError;
 
 import org.apache.log4j.LogManager;
@@ -31,9 +25,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import de.mb.rdw.swing.ChildCharacterFrame;
-import de.mb.rdw.swing.ChildHelperFrame;
-import de.mb.rdw.swing.ChildMapFrame;
-import de.mb.rdw.swing.listener.PopupListener;
 import de.mb.util.WebstartFileProvider;
 
 public class SimpleClient extends JFrame {
@@ -48,6 +39,39 @@ public class SimpleClient extends JFrame {
 		img = new ImageIcon(getClass().getResource(
 				"/resource/images/background.jpg")).getImage();
 		initialize();
+		MenuBar mb = new MenuBar();
+		Menu m = new Menu("Datei");
+		MenuItem m_neu = new MenuItem("Neu");
+		m_neu.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				ChildCharacterFrame temp = new ChildCharacterFrame(
+						"Charakterblatt", true);
+				addChild(temp, 25, 25, false);
+			}
+
+		});
+
+		MenuItem m_exit = new MenuItem("Beenden");
+		m_exit.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+
+		});
+
+		m.add(m_neu);
+		m.addSeparator();
+		m.add(m_exit);
+		mb.add(m);
+
+		Menu m2 = new Menu("Hilfe");
+		MenuItem m_info = new MenuItem("Info");
+		m2.add(m_info);
+		mb.setHelpMenu(m2);
+
+		setMenuBar(mb);
 	}
 
 	/**
@@ -89,20 +113,6 @@ public class SimpleClient extends JFrame {
 		this.setVisible(false);
 		this.setBounds(50, 50, 800, 720);
 		this.setVisible(true);
-
-		JButton character = new JButton("Neu");
-		character.setBounds(0, 0, 48, 48);
-		character.setBorder(BorderFactory.createEtchedBorder());
-		character.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				ChildCharacterFrame temp = new ChildCharacterFrame(
-						"Charakterblatt", true);
-				addChild(temp, 0, 0, false);
-			}
-
-		});
-		getContentPane().add(character);
 	}
 
 	/**

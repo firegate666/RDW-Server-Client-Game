@@ -1,9 +1,6 @@
 package de.mb.rdw.swing;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.FocusTraversalPolicy;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -29,11 +26,9 @@ import org.exolab.castor.xml.ValidationException;
 
 import de.mb.rdw.model.GameCharacter;
 import de.mb.rdw.model.GameCharacterType;
-import de.mb.rdw.swing.gui.TransparentAttributeComboBox;
-import de.mb.rdw.swing.gui.TransparentAttributeTextField;
-import de.mb.rdw.swing.gui.TransparentButton;
-import de.mb.rdw.swing.gui.TransparentLabel;
-import de.mb.rdw.swing.gui.TransparentPanel;
+import de.mb.rdw.swing.implementations.TransparentAttributeComboBox;
+import de.mb.rdw.swing.implementations.TransparentAttributeTextArea;
+import de.mb.rdw.swing.implementations.TransparentAttributeTextField;
 import de.mb.util.Utils;
 
 public class ChildCharacterFrame extends ChildFrame implements ActionListener {
@@ -281,6 +276,9 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		TransparentButton text_image = new TransparentButton("Bild?");
 		text_image.setBorder(BorderFactory.createEtchedBorder());
 
+		TransparentLabel label_notes = new TransparentLabel("Sonstiges");
+		TransparentAttributeTextArea text_notes = new TransparentAttributeTextArea(character, "notes");
+
 		int x = 0;
 		int y = 50;
 		panel.add(label_titel, x + 10, y + 10, 100, 23);
@@ -309,6 +307,9 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		panel.add(text_rz4, x + 140, y + 190, 23, 23);
 
 		panel.add(text_image, x + 170, y + 40, 120, 173);
+
+		panel.add(label_notes, x + 10, y + 220, 100, 23);
+		panel.add(text_notes.getScrollPane(), x + 10, y + 240, 280, 80);
 
 		return panel;
 	}
@@ -440,7 +441,7 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 				return;
 			try {
 				String xml = character.writeToXml();
-				Utils.writeToFile(character.getAttribute("name") + ".chr", xml);
+				Utils.writeToFile(character.getAttribute("name") + ".chr", xml, "ISO-8859-1");
 				initPanels();
 			} catch (MarshalException e1) {
 				log.error(e1);
