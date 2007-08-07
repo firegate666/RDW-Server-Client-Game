@@ -1,14 +1,21 @@
 package de.mb.rdw.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.FocusTraversalPolicy;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -85,9 +92,31 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		TransparentAttributeTextField text_name = new TransparentAttributeTextField(
 				character, "name", -1, JTextField.LEFT);
 		TransparentLabel label_type = new TransparentLabel("Typus:");
-		TransparentAttributeComboBox text_type = new TransparentAttributeComboBox(
+		final TransparentAttributeComboBox text_type = new TransparentAttributeComboBox(
 				GameCharacterType.getAvailableCharacters(character), character,
 				"type");
+		text_type.addMouseListener(new MouseListener() {
+
+			public void mouseEntered(MouseEvent e) {
+				Object item = text_type.getSelectedItem();
+				DefaultComboBoxModel model = new DefaultComboBoxModel(
+						GameCharacterType.getAvailableCharacters(character));
+				text_type.setModel(model);
+				model.setSelectedItem(item);
+			}
+
+			public void mouseClicked(MouseEvent e) {
+			}
+
+			public void mouseExited(MouseEvent e) {
+			}
+
+			public void mousePressed(MouseEvent e) {
+			}
+
+			public void mouseReleased(MouseEvent e) {
+			}
+		});
 
 		panel.add(label_name);
 		panel.add(text_name);
@@ -223,10 +252,63 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		TransparentAttributeTextField text_titel = new TransparentAttributeTextField(
 				character, "titel", -1, JTextField.LEFT);
 
+		TransparentLabel label_age = new TransparentLabel("Alter:");
+		TransparentAttributeTextField text_age = new TransparentAttributeTextField(
+				character, "age", 4);
+
+		TransparentLabel label_size = new TransparentLabel("Größe:");
+		TransparentAttributeTextField text_size = new TransparentAttributeTextField(
+				character, "size", 3);
+
+		TransparentLabel label_weight = new TransparentLabel("Gewicht:");
+		TransparentAttributeTextField text_weight = new TransparentAttributeTextField(
+				character, "weight", 3);
+
+		TransparentLabel label_tg = new TransparentLabel("Barschaft:");
+		TransparentAttributeTextField text_tg = new TransparentAttributeTextField(
+				character, "tg");
+
+		TransparentLabel label_rz = new TransparentLabel("Resistenz");
+		TransparentAttributeTextField text_rz1 = new TransparentAttributeTextField(
+				character, "rz1");
+		TransparentAttributeTextField text_rz2 = new TransparentAttributeTextField(
+				character, "rz2");
+		TransparentAttributeTextField text_rz3 = new TransparentAttributeTextField(
+				character, "rz3");
+		TransparentAttributeTextField text_rz4 = new TransparentAttributeTextField(
+				character, "rz4");
+
+		TransparentButton text_image = new TransparentButton("Bild?");
+		text_image.setBorder(BorderFactory.createEtchedBorder());
+
 		int x = 0;
 		int y = 50;
 		panel.add(label_titel, x + 10, y + 10, 100, 23);
-		panel.add(text_titel, x + 90, y + 10, 100, 23);
+		panel.add(text_titel, x + 90, y + 10, 200, 23);
+
+		panel.add(label_age, x + 20, y + 40, 100, 23);
+		panel.add(text_age, x + 90, y + 40, 40, 23);
+		panel.add(new TransparentLabel("Jahre"), x + 132, y + 40, 40, 23);
+
+		panel.add(label_size, x + 20, y + 70, 100, 23);
+		panel.add(text_size, x + 90, y + 70, 40, 23);
+		panel.add(new TransparentLabel("cm"), x + 132, y + 70, 40, 23);
+
+		panel.add(label_weight, x + 20, y + 100, 100, 23);
+		panel.add(text_weight, x + 90, y + 100, 40, 23);
+		panel.add(new TransparentLabel("kg"), x + 132, y + 100, 40, 23);
+
+		panel.add(label_tg, x + 20, y + 130, 100, 23);
+		panel.add(text_tg, x + 90, y + 130, 40, 23);
+		panel.add(new TransparentLabel("TG"), x + 132, y + 130, 40, 23);
+
+		panel.add(label_rz, x + 60, y + 160, 100, 23);
+		panel.add(text_rz1, x + 20, y + 190, 23, 23);
+		panel.add(text_rz2, x + 60, y + 190, 23, 23);
+		panel.add(text_rz3, x + 100, y + 190, 23, 23);
+		panel.add(text_rz4, x + 140, y + 190, 23, 23);
+
+		panel.add(text_image, x + 170, y + 40, 120, 173);
 
 		return panel;
 	}
@@ -286,7 +368,7 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 				character, "ins", 2);
 		TransparentLabel label_pg = new TransparentLabel("Psy. Gesundheit:");
 		TransparentAttributeTextField text_pg = new TransparentAttributeTextField(
-				character, "pg", 2);
+				character, "pg", 3);
 		TransparentLabel label_if = new TransparentLabel("Immunitätsfaktor:");
 		TransparentAttributeTextField text_if = new TransparentAttributeTextField(
 				character, "if", 2);
@@ -318,7 +400,7 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 			}
 
 		});
-		ArrayList list = new ArrayList();
+		ArrayList <String> list = new ArrayList<String>();
 		for (int i = 0; i < filelist.length; i++) {
 			String temp = filelist[i].getName().replaceAll("\\.chr", "");
 			if (!temp.equalsIgnoreCase("") && filelist[i].isFile())
