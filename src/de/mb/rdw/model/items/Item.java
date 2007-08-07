@@ -1,24 +1,55 @@
 package de.mb.rdw.model.items;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * this is a basic item
- * 
+ *
  * @author Marco
  *
  */
 public class Item implements Serializable {
 
-	protected String id;
-	protected String name;
-	protected String description;
+	protected static HashMap<Integer, Item> items = new HashMap<Integer, Item>();
 
-	protected float weight;
+	static {
+		Item next = new Item();
+		next.setDescription("");
+		next.setId(1);
+		next.setName("Fackel");
+		next.setWeight(5.0f);
 
-	protected int price;
+		items.put(next.getId(), next);
+	}
 
-	protected int wf;
+	public static Item getItem(int id) {
+		Item item = new Item();
+		if (Item.items.containsKey(new Integer(id))) {
+			item = Item.items.get(new Integer(id));
+		}
+		return item;
+	}
+
+	public static Item[] getList() {
+		Item[] result = new Item[Item.items.size()];
+		Iterator i = items.values().iterator();
+		int c = 0;
+		while(i.hasNext())
+			result[c++] = (Item)i.next();
+		return result;
+	}
+
+	protected int id = 0;
+	protected String name = "-";
+	protected String description = "-";
+
+	protected float weight = 0f;
+
+	protected int price = 0;
+
+	protected int wf = 0;
 
 	/**
 	 * @return name
@@ -93,14 +124,14 @@ public class Item implements Serializable {
 	/**
 	 * @return id
 	 */
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
 	/**
 	 * @param id Festzulegender id
 	 */
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
