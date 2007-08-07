@@ -8,9 +8,13 @@ import de.mb.util.Utils;
 
 public class TransparentButton extends JButton {
 	final static Logger log = Logger.getLogger(TransparentButton.class);
-	public TransparentButton() {
-		super();
+	public TransparentButton(String text) {
+		super(text);
 		initialize();
+	}
+
+	public TransparentButton() {
+		this("");
 	}
 
 	protected void initialize() {
