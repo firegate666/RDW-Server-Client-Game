@@ -14,6 +14,8 @@ import javax.swing.JApplet;
 
 import org.apache.log4j.Logger;
 
+import com.sun.j3d.utils.applet.MainFrame;
+
 public class Asteroids extends JApplet implements Runnable, KeyListener {
 
 	final static Logger log = Logger.getLogger(Asteroids.class);
@@ -313,6 +315,10 @@ public class Asteroids extends JApplet implements Runnable, KeyListener {
 	public void keyTyped(KeyEvent e) {
 		// TODO Automatisch erstellter Methoden-Stub
 
+	}
+
+	public static void main(String[] args) {
+		MainFrame frame = new MainFrame(new Asteroids(), 640, 480);
 	}
 
 }
