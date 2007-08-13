@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: de.mb.rdw.RdWClient
-Class-Path: lib/log4j-1.2.8.jar lib/castor-0.9.7.jar lib/xercesImpl.jar lib/commons-logging.jar
+Main-Class: de.mb.engine.RdwGameEngine
+Class-Path: lib/j3dcore.jar lib/j3dutils.jar lib/log4j-1.2.8.jar lib/castor-0.9.7.jar lib/xercesImpl.jar lib/commons-logging.jar
