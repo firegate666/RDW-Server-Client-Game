@@ -247,6 +247,7 @@ public class RdwGameEngine extends Game {
 	 * @see Game#gameStartup()
 	 */
 	public void gameStartup() {
+		applet().requestFocus();
 		background = new ImageEntity(this);
 		background.load("/resource/sprites/tanaris.jpg");
 
@@ -325,20 +326,25 @@ public class RdwGameEngine extends Game {
 			int h = spr.frameHeight() - 1;
 
 			// stop sprite at screen edge
-			if (spr.position().X() < 100)
-				spr.position().setX(100);
-			if (spr.position().Y() < 100)
-				spr.position().setY(100);
+			if (spr.position().X() < 25)
+				spr.position().setX(25);
+			if (spr.position().Y() < 25)
+				spr.position().setY(25);
 
-			if (spr.position().X() > background.width() - 100) {
+			if (spr.position().X() >= background.width() - 100) // hard limit
 				spr.position().setX(background.width() - 100);
-			} else if (spr.position().X() > getScreenWidth() - 100) {
-				offset_x = spr.position().X() - (getScreenWidth() - 100);
+			else if (spr.position().X() >= background.width() - getScreenWidth()/2) { // stop scrolling
+				//spr.position().setX(background.width() - getScreenWidth()/2);
+			} else if (spr.position().X() > getScreenWidth() - getScreenWidth()/2) { // update offset
+				offset_x = spr.position().X() - (getScreenWidth() - getScreenWidth()/2);
 			}
-			if (spr.position().Y() > background.height() - 100) {
+			
+			if (spr.position().Y() >= background.height() - 100) // hard limit
 				spr.position().setY(background.height() - 100);
-			} else if (spr.position().Y() > getScreenHeight() - 100) {
-				offset_y = spr.position().Y() - (getScreenHeight() - 100);
+			else if (spr.position().Y() >= background.height() - getScreenHeight()/2) { // stop scrolling
+				//spr.position().setY(background.height() - getScreenHeight()/2);
+			} else if (spr.position().Y() > getScreenHeight() - getScreenHeight()/2) { // update offset
+				offset_y = spr.position().Y() - (getScreenHeight() - getScreenHeight()/2);
 			}
 		}
 
