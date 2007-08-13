@@ -1,4 +1,4 @@
-package java5gameprogramming;
+package java5gameprogramming.v1;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -9,6 +9,7 @@ import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.Random;
+import java5gameprogramming.SoundClip;
 
 import javax.swing.JApplet;
 

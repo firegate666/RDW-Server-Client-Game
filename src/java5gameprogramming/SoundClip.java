@@ -95,6 +95,7 @@ public class SoundClip {
 		try {
 			url = this.getClass().getResource(filename);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return url;
 	}
@@ -106,10 +107,13 @@ public class SoundClip {
 			clip.open(sample);
 			return true;
 		} catch (IOException e) {
+			e.printStackTrace();
 			return false;
 		} catch (UnsupportedAudioFileException e) {
+			e.printStackTrace();
 			return false;
 		} catch (LineUnavailableException e) {
+			e.printStackTrace();
 			return false;
 		}
 	}

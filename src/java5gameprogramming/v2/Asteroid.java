@@ -1,9 +1,9 @@
-package java5gameprogramming;
+package java5gameprogramming.v2;
 
 import java.awt.Polygon;
 import java.awt.Rectangle;
 
-public class Asteroid extends BaseVectorShape {
+public class Asteroid extends VectorEntity {
 
 	protected int[] astx = { -20, -13, 0, 20, 22, 20, 12, 2, -10, -22, -16 };
 

@@ -1,11 +1,9 @@
-package java5gameprogramming;
+package java5gameprogramming.v2;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
 
-public abstract class BaseVectorShape {
-	protected Shape shape;
-
+public abstract class BaseGameEntity {
 	protected boolean alive;
 
 	protected double x, y;
@@ -57,21 +55,6 @@ public abstract class BaseVectorShape {
 	 */
 	public void setMoveAngle(double moveAngle) {
 		this.moveAngle = moveAngle;
-	}
-
-	/**
-	 * @return shape
-	 */
-	public Shape getShape() {
-		return shape;
-	}
-
-	/**
-	 * @param shape
-	 *            Festzulegender shape
-	 */
-	public void setShape(Shape shape) {
-		this.shape = shape;
 	}
 
 	/**
@@ -186,8 +169,7 @@ public abstract class BaseVectorShape {
 	 *
 	 *
 	 */
-	public BaseVectorShape() {
-		setShape(null);
+	public BaseGameEntity() {
 		setAlive(false);
 		setX(0.0);
 		setY(0.0);

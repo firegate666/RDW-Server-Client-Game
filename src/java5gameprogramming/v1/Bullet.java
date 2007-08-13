@@ -1,4 +1,4 @@
-package java5gameprogramming;
+package java5gameprogramming.v1;
 
 import java.awt.Rectangle;
 
