@@ -14,11 +14,13 @@
 		<jar href="castor-0.9.7.jar"/>
 		<jar href="xercesImpl.jar"/>
 		<jar href="commons-logging.jar"/>
+		<jar href="j3dcore.jar"/>
+		<jar href="j3dutils.jar"/>
 						
 		<j2se version="1.5+" href="http://java.sun.com/products/autodl/j2se"/>
 	</resources>
 	
-	<application-desc main-class="de.mb.rdw.RdWClient"/>
+	<application-desc main-class="de.mb.engine.RdwGameEngine"/>
 	
 	<security>
 		<all-permissions/>
