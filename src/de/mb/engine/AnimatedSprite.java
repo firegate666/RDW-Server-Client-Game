@@ -4,10 +4,10 @@ package de.mb.engine;
 * by Jonathan S. Harbour
 * AnimatedSprite class
 *****************************************************/
-import java.awt.*;
-import java.applet.*;
-import java.awt.image.*;
-import java.net.*;
+import java.applet.Applet;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 public class AnimatedSprite extends Sprite {
     //this image holds the large tiled bitmap

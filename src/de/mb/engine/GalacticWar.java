@@ -4,10 +4,11 @@ package de.mb.engine;
 * by Jonathan S. Harbour
 * GALACTIC WAR, Chapter 11
 *****************************************************/
-import java.awt.*;
-import java.util.*;
-import java.lang.System;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.util.Random;
 
 public class GalacticWar extends Game {
     //these must be static because they are passed to a constructor

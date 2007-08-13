@@ -2,10 +2,13 @@ package de.mb.engine;
 /*********************************************************
  * Base game image class for bitmapped game entities
  **********************************************************/
-import java.awt.*;
-import java.awt.geom.*;
-import java.net.*;
-import java.applet.*;
+import java.applet.Applet;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.geom.AffineTransform;
+import java.net.URL;
 
 public class ImageEntity extends BaseGameEntity {
     //variables
