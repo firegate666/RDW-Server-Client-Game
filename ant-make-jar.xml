@@ -4,63 +4,64 @@
     </description>
 
 	<target name="init">
-		<!--copy todir="C:\temp\rdw">
+		<copy todir="deploy" overwrite="yes">
     		<fileset dir="./lib"/>
-		</copy-->
-		<copy todir="C:\temp\rdw">
+		</copy>
+		<copy todir="deploy">
     		<fileset dir="./web"/>
 		</copy>
-		<jar 	destfile="C:\temp\rdw\rdw_config.jar"
-				baseDir="config/"/>
 	</target>
-
+	
 	<target name="deploy_startup">
 		<ftp server="firegate.de" userid="web1" password="66igamsm" remotedir="public_html/rdw">
-			<fileset dir="C:\temp\rdw">
+			<fileset dir="deploy">
       			<include name="*.jnlp"/>
     		</fileset>
 		</ftp>
 	</target>
 
-	<target name="deploy_client" depends="server,client">
-		<antcall target="sign"/>
+	<target name="deploy_client" depends="client">
 		<ftp server="firegate.de" userid="web1" password="66igamsm" remotedir="public_html/rdw">
-			<fileset dir="C:\temp\rdw">
+			<fileset dir="deploy">
       			<include name="rdw_client.jar"/>
     		</fileset>
 		</ftp>
 	</target>
 
 	<target name="deploy_simple_client" depends="simple_client">
-		<antcall target="sign"/>
 		<ftp server="firegate.de" userid="web1" password="66igamsm" remotedir="public_html/rdw">
-			<fileset dir="C:\temp\rdw">
+			<fileset dir="deploy">
       			<include name="rdw_simple_client.jar"/>
     		</fileset>
 		</ftp>
 	</target>
 
-	<target name="deploy_config" depends="server,client">
-		<antcall target="sign"/>
+	<target name="deploy_config">
+		<jar 	destfile="deploy\rdw_config.jar"
+				baseDir="config/"/>
+		<signjar alias="rnp_mbehnke" storepass="passwort" keystore="./keystore">
+			<fileset dir="deploy">
+			    <include name="rdw_config.jar"/>
+			</fileset>
+		</signjar>
 		<ftp server="firegate.de" userid="web1" password="66igamsm" remotedir="public_html/rdw">
-			<fileset dir="C:\temp\rdw">
+			<fileset dir="deploy">
       			<include name="rdw_config.jar"/>
     		</fileset>
 		</ftp>
 	</target>
 
-	<target name="deploy_all" depends="server,client">
-		<antcall target="sign"/>
+	<target name="deploy">
 		<ftp server="firegate.de" userid="web1" password="66igamsm" remotedir="public_html/rdw">
-			<fileset dir="C:\temp\rdw">
+			<fileset dir="deploy">
       			<include name="*"/>
     		</fileset>
 		</ftp>
 	</target>
 
-	<target name="sign">
+	<target name="signall">
 		<signjar alias="rnp_mbehnke" storepass="passwort" keystore="./keystore">
-			<fileset dir="C:\temp\rdw">
+			<fileset dir="deploy">
 			    <include name="*.jar"/>
 			</fileset>
 		</signjar>
@@ -77,16 +78,70 @@
 	</target>
 
 	<target name="client" depends="init">
-		<jar 	destfile="C:\temp\rdw\rdw_client.jar"
+		<jar 	destfile="deploy/rdw_client.jar"
 				baseDir="./bin/"
 				manifest="./MANIFEST_CLIENT.MF"
 				excludes="**/resource/**"/>
+		<signjar alias="rnp_mbehnke" storepass="passwort" keystore="./keystore">
+			<fileset dir="deploy">
+			    <include name="rdw_client.jar"/>
+			</fileset>
+		</signjar>
 	</target>
 
 	<target name="simple_client" depends="init">
-		<jar 	destfile="C:\temp\rdw\rdw_simple_client.jar"
+		<jar 	destfile="deploy/rdw_simple_client.jar"
 				baseDir="./bin/"
 				manifest="./MANIFEST_SIMPLE_CLIENT.MF"
 				excludes="**/resource/**"/>
+		<signjar alias="rnp_mbehnke" storepass="passwort" keystore="./keystore">
+			<fileset dir="deploy">
+			    <include name="rdw_simple_client.jar"/>
+			</fileset>
+		</signjar>
 	</target>
+	
+	<target name="clean">
+		<unsignjar jar="lib/j3dcore.jar"/>
+		<unsignjar jar="lib/j3dutils.jar"/>
+		<unsignjar jar="lib/joalmixer.jar"/>
+		<unsignjar jar="lib/vecmath.jar"/>
+	</target>
+	
+	<macrodef name="unsignjar">
+		
+	    <attribute name="jar"/>
+	    	
+	    <sequential>
+		<!-- Remove any existing signatures from a JAR file. -->
+		<tempfile prefix="usignjar-" destdir="${java.io.tmpdir}" property="temp.file"/>
+	        <echo message="Removing signatures from JAR: @{jar}"/>
+	        <mkdir dir="${temp.file}"/>
+		        
+	        <unjar src="@{jar}" dest="${temp.file}">
+	            <patternset>
+	                <include name="**"/>
+	                <exclude name="META-INF/*.SF"/>
+	                <exclude name="META-INF/*.DSA"/>
+	                <exclude name="META-INF/*.RSA"/>
+	            </patternset>
+	        </unjar>
+		        
+	        <delete file="@{jar}" failonerror="true"/>
+		        
+	        <!-- Touch it in case the file didn't have a manifest.
+	             Otherwise the JAR task below will fail if the manifest 
+		     file doesn't exist. -->
+	        <mkdir dir="${temp.file}/META-INF"/>
+	        <touch file="${temp.file}/META-INF/MANIFEST.MF"/>
+		        
+	        <jar destfile="@{jar}" 
+	            basedir="${temp.file}" 
+	            includes="**" 
+	            manifest="${temp.file}/META-INF/MANIFEST.MF"/>
+		        
+	        <delete dir="${temp.file}" failonerror="true"/>
+	    </sequential>
+	</macrodef>
+
 </project>
