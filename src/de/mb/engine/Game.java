@@ -5,12 +5,16 @@ package de.mb.engine;
 * Applet Game Framework class
 *****************************************************/
 
-import java.applet.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.lang.System;
-import java.util.*;
+import java.applet.Applet;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 abstract class Game extends Applet implements Runnable, KeyListener,
     MouseListener, MouseMotionListener {
@@ -25,7 +29,7 @@ abstract class Game extends Applet implements Runnable, KeyListener,
     //screen and double buffer related variables
     private BufferedImage backbuffer;
     private Graphics2D g2d;
-    private int screenWidth, screenHeight;
+    protected int screenWidth, screenHeight;
 
     //keep track of mouse position and buttons
     private Point2D mousePos = new Point2D(0,0);
@@ -327,7 +331,7 @@ abstract class Game extends Applet implements Runnable, KeyListener,
       *****************************************************/
      protected void drawSprites() {
          //draw sprites in reverse order (reverse priority)
-         for (int n=0; n<_sprites.size(); n++) {
+         for (int n=_sprites.size()-1; n>-1; n--) {
              AnimatedSprite spr = (AnimatedSprite) _sprites.get(n);
              if (spr.alive()) {
                  spr.updateFrame();
@@ -350,6 +354,10 @@ abstract class Game extends Applet implements Runnable, KeyListener,
              }
          }
      }
-
-
+	public int getScreenHeight() {
+		return screenHeight;
+	}
+	public int getScreenWidth() {
+		return screenWidth;
+	}
 }
