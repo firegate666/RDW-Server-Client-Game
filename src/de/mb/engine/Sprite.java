@@ -4,12 +4,16 @@ package de.mb.engine;
  * by Jonathan S. Harbour
  * Sprite class
  **********************************************************/
-import java.awt.*;
-import java.applet.*;
+import java.applet.Applet;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
 
 public class Sprite extends Object {
     private ImageEntity entity;
-    protected Point2D pos;
+    protected Point2D pos; // this is world position absolute
+    protected Point2D drawpos; // where to draw (for srolling)
     protected Point2D vel;
     protected double rotRate;
     protected int currentState;
@@ -22,7 +26,7 @@ public class Sprite extends Object {
         entity = new ImageEntity(a);
         entity.setGraphics(g2d);
         entity.setAlive(false);
-        pos = new Point2D(0, 0);
+        drawpos = pos = new Point2D(0, 0);
         vel = new Point2D(0, 0);
         rotRate = 0.0;
         currentState = 0;
@@ -38,8 +42,8 @@ public class Sprite extends Object {
 
     //perform affine transformations
     public void transform() {
-        entity.setX(pos.X());
-        entity.setY(pos.Y());
+        entity.setX(drawpos.X());
+        entity.setY(drawpos.Y());
         entity.transform();
     }
 
@@ -58,6 +62,7 @@ public class Sprite extends Object {
     public void updatePosition() {
         pos.setX(pos.X() + vel.X());
         pos.setY(pos.Y() + vel.Y());
+        drawpos = pos; // normally dra position and world position is the same
     }
 
     //methods related to automatic rotation factor
@@ -161,5 +166,13 @@ public class Sprite extends Object {
             }
         }
     }
+
+	public Point2D drawposition() {
+		return drawpos;
+	}
+
+	public void setDrawposition(Point2D drawpos) {
+		this.drawpos = drawpos;
+	}
 
 }
