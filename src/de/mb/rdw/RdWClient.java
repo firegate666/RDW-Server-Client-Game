@@ -28,6 +28,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
+import de.mb.engine.RdwGameEngine;
 import de.mb.rdw.swing.ChildCharacterFrame;
 import de.mb.rdw.swing.ChildHelperFrame;
 import de.mb.rdw.swing.ChildMapFrame;
@@ -141,9 +142,10 @@ public class RdWClient extends JFrame {
 		ChildMapFrame child3 = new ChildMapFrame("Map");
 		this.addChild(child3, 300, 300, true);
 
-		JPanel game = new GameEngine();
-		int width = getWidth() * 3/4;
-		int height = getHeight() * 3/4;
+		RdwGameEngine game = new RdwGameEngine(800, 600);
+		game.init();
+		int width = 800;
+		int height = 600;
 		int x = (getWidth() - width) / 2;
 		int y = (getHeight() - height) / 2;
 		game.setBounds(x, y, width, height);

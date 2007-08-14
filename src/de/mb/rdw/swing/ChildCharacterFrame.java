@@ -444,6 +444,8 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 			String s = (String) JOptionPane.showInputDialog(this,
 					"Wähle Deinen Charakter", "Name: ",
 					JOptionPane.QUESTION_MESSAGE, null, list, list[0]);
+			if (s == null)
+				return;
 			String xml = Utils.readFromFile(s + ".chr");
 			try {
 				character = GameCharacter.getFromXml(xml);

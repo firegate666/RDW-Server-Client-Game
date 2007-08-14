@@ -1,11 +1,18 @@
 package de.mb.engine;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
+import javax.swing.DefaultDesktopManager;
+import javax.swing.JComponent;
+import javax.swing.JDesktopPane;
+
 import com.sun.j3d.utils.applet.JMainFrame;
+
+import de.mb.rdw.swing.ChildMapFrame;
 
 /**
  * @author Jonathan S. Harbour
@@ -19,16 +26,43 @@ public class RdwGameEngine extends Game {
 
 	/**
 	 * show applet in Swing Frame
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		RdwGameEngine rdw = new RdwGameEngine(800, 600);
 		JMainFrame frame = new JMainFrame(rdw, 800, 600);
+		/*
+		JDesktopPane desk = new JDesktopPane();
+		desk.setDoubleBuffered(true);
+		desk.setOpaque(false);
+		desk.setDesktopManager(new DefaultDesktopManager());
+		frame.setContentPane(desk);
+		frame.getContentPane().setLayout(null);
+
+		JButton child = new JButton("Titel");
+		child.setVisible(true);
+		child.repaint();
+		child.setBounds(900, 600, 20, 20);
+		frame.getContentPane().add(child);
+
+		frame.getContentPane().add(rdw);
+		//rdw.setVisible(false);
+
+		frame.getContentPane().setComponentZOrder(rdw, 0);
+		frame.getContentPane().setComponentZOrder(child, 1);
+		*/
 	}
 
 	public RdwGameEngine(int width, int height) {
 		super(60, width, height);
+		JDesktopPane desk = new JDesktopPane();
+		desk.setDoubleBuffered(true);
+		desk.setOpaque(false);
+		desk.setDesktopManager(new DefaultDesktopManager());
+		desk.setLayout(null);
+		setContentPane(desk);
+
 	}
 
 	/**
@@ -55,6 +89,10 @@ public class RdwGameEngine extends Game {
 	 * position offset y for scrolling background
 	 */
 	protected double offset_y = 0;
+
+	protected double world_x = 2000;
+
+	protected double world_y = 2000;
 
 	/**
 	 * default walking speed
@@ -86,9 +124,11 @@ public class RdwGameEngine extends Game {
 	 */
 	protected boolean keyctrl = false;
 
+	protected boolean showDebug = true;
+
 	/**
 	 * check key events
-	 * 
+	 *
 	 */
 	protected void checkkeys() {
 		int speed = default_speed;
@@ -142,6 +182,10 @@ public class RdwGameEngine extends Game {
 		if (keyCode == KeyEvent.VK_CONTROL)
 			keyctrl = false;
 
+		if (keyCode == KeyEvent.VK_D) {
+			showDebug = !showDebug;
+		}
+
 	}
 
 	/**
@@ -168,35 +212,35 @@ public class RdwGameEngine extends Game {
 
 	}
 
+	protected ChildMapFrame child;
+
 	/**
 	 * @see Game#gameRefreshScreen()
 	 */
 	public void gameRefreshScreen() {
-		Graphics2D g2d = graphics();
-
 		// draw the background
 		g2d.drawImage(background.getImage(), 0, 0, getScreenWidth() - 1,
 				getScreenHeight() - 1, 0 + (int) offset_x, 0 + (int) offset_y,
 				getScreenWidth() - 1 + (int) offset_x, getScreenHeight() - 1
 						+ (int) offset_y, this);
 
-		g2d.setFont(new Font("Verdana", Font.BOLD, 16));
-		g2d.setColor(Color.BLACK);
-		g2d.drawString("Aktuelle Position: " + avatar_x + ":" + avatar_y, 10,
-				16);
-		g2d.setFont(new Font("Verdana", Font.BOLD, 10));
-		g2d.setColor(Color.WHITE);
-		g2d.drawString(
-				"Steuerung mit Pfeiltasten (vorwärts, rückwärts, drehen)", 10,
-				getScreenHeight() - 30);
-		g2d.drawString("Rennen mit STRG", 10, getScreenHeight() - 20);
-		g2d.drawString("Slide: " + offset_x + ":" + offset_y, 10,
-				getScreenHeight() - 10);
+		if (showDebug) {
+			g2d.setColor(Color.WHITE);
+			g2d.setFont(new Font("Verdana", Font.BOLD, 10));
+			g2d.drawString("Aktuelle Position: " + avatar_x + ":" + avatar_y,
+					10, getScreenHeight() - 40);
+			g2d.drawString(
+					"Steuerung mit Pfeiltasten (vorwärts, rückwärts, drehen)",
+					10, getScreenHeight() - 30);
+			g2d.drawString("Rennen mit STRG", 10, getScreenHeight() - 20);
+			g2d.drawString("Slide: " + (int) offset_x + ":" + (int) offset_y,
+					10, getScreenHeight() - 10);
+		}
 	}
 
 	/**
 	 * turn avatar
-	 * 
+	 *
 	 * @param angle
 	 */
 	public void turn(int angle) {
@@ -209,7 +253,7 @@ public class RdwGameEngine extends Game {
 
 	/**
 	 * walk avatar
-	 * 
+	 *
 	 * @param speed
 	 */
 	public void walk(int speed) {
@@ -247,9 +291,10 @@ public class RdwGameEngine extends Game {
 	 * @see Game#gameStartup()
 	 */
 	public void gameStartup() {
-		applet().requestFocus();
+		applet().requestFocus(); // get focus, so we don't need to click to start playing
+		applet().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		background = new ImageEntity(this);
-		background.load("/resource/sprites/tanaris.jpg");
+		background.load("/resource/sprites/tanaris.gif");
 
 		ImageEntity shipImage = new ImageEntity(this);
 		shipImage.load("/resource/sprites/avatar.png");
@@ -264,8 +309,7 @@ public class RdwGameEngine extends Game {
 		ship.setFrameHeight(48);
 		ship.setTotalFrames(1);
 		ship.setColumns(1);
-		ship.setPosition(new Point2D(getScreenWidth() / 2,
-				getScreenHeight() / 2));
+		ship.setPosition(new Point2D(200, 200));
 		ship.setAlive(true);
 		ship.setFrameDelay(4);
 		sprites().add(ship);
@@ -276,6 +320,13 @@ public class RdwGameEngine extends Game {
 		castle.setPosition(new Point2D(738 * 2, 888 * 2));
 		castle.setAlive(true);
 		sprites().add(castle);
+
+		AnimatedSprite castle2 = new AnimatedSprite(this, graphics());
+		castle2.setSpriteType(RdwGameEngine.SPRITE_STATIC_OBJECT);
+		castle2.setImage(castleImage.getImage());
+		castle2.setPosition(new Point2D(838 * 2, 988 * 2));
+		castle2.setAlive(true);
+		sprites().add(castle2);
 	}
 
 	/**
@@ -314,7 +365,7 @@ public class RdwGameEngine extends Game {
 
 	/**
 	 * handle sprite repositioning and offset due to scrolling
-	 * 
+	 *
 	 * @param spr
 	 */
 	public void warp(AnimatedSprite spr) {
@@ -331,20 +382,28 @@ public class RdwGameEngine extends Game {
 			if (spr.position().Y() < 25)
 				spr.position().setY(25);
 
-			if (spr.position().X() >= background.width() - 100) // hard limit
-				spr.position().setX(background.width() - 100);
-			else if (spr.position().X() >= background.width() - getScreenWidth()/2) { // stop scrolling
-				//spr.position().setX(background.width() - getScreenWidth()/2);
-			} else if (spr.position().X() > getScreenWidth() - getScreenWidth()/2) { // update offset
-				offset_x = spr.position().X() - (getScreenWidth() - getScreenWidth()/2);
+			if (spr.position().X() >= world_x - 100) // hard limit
+				spr.position().setX(world_x - 100);
+			else if (spr.position().X() >= world_x
+					- getScreenWidth() / 2) { // stop scrolling
+				// spr.position().setX(background.width() - getScreenWidth()/2);
+			} else if (spr.position().X() > getScreenWidth() - getScreenWidth()
+					/ 2) { // update offset
+				offset_x = spr.position().X()
+						- (getScreenWidth() - getScreenWidth() / 2);
 			}
-			
-			if (spr.position().Y() >= background.height() - 100) // hard limit
-				spr.position().setY(background.height() - 100);
-			else if (spr.position().Y() >= background.height() - getScreenHeight()/2) { // stop scrolling
-				//spr.position().setY(background.height() - getScreenHeight()/2);
-			} else if (spr.position().Y() > getScreenHeight() - getScreenHeight()/2) { // update offset
-				offset_y = spr.position().Y() - (getScreenHeight() - getScreenHeight()/2);
+
+			if (spr.position().Y() >= world_y - 100) // hard
+																	// limit
+				spr.position().setY(world_y - 100);
+			else if (spr.position().Y() >= world_y
+					- getScreenHeight() / 2) { // stop scrolling
+				// spr.position().setY(background.height() -
+				// getScreenHeight()/2);
+			} else if (spr.position().Y() > getScreenHeight()
+					- getScreenHeight() / 2) { // update offset
+				offset_y = spr.position().Y()
+						- (getScreenHeight() - getScreenHeight() / 2);
 			}
 		}
 

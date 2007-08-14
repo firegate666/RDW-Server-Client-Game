@@ -16,19 +16,21 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
-abstract class Game extends Applet implements Runnable, KeyListener,
+import javax.swing.JApplet;
+
+abstract class Game extends JApplet implements Runnable, KeyListener,
     MouseListener, MouseMotionListener {
 
     //the main game loop thread
     private Thread gameloop;
 
     //internal list of sprites
-    private LinkedList _sprites;
-    public LinkedList sprites() { return _sprites; }
+    private LinkedList<AnimatedSprite> _sprites;
+    public LinkedList<AnimatedSprite> sprites() { return _sprites; }
 
     //screen and double buffer related variables
     private BufferedImage backbuffer;
-    private Graphics2D g2d;
+    protected Graphics2D g2d;
     protected int screenWidth, screenHeight;
 
     //keep track of mouse position and buttons
@@ -275,7 +277,7 @@ abstract class Game extends Applet implements Runnable, KeyListener,
       *****************************************************/
      protected void updateSprites() {
          for (int n=0; n < _sprites.size(); n++) {
-             AnimatedSprite spr = (AnimatedSprite) _sprites.get(n);
+             AnimatedSprite spr = _sprites.get(n);
              if (spr.alive()) {
                  spr.updatePosition();
                  spr.updateRotation();
@@ -298,7 +300,7 @@ abstract class Game extends Applet implements Runnable, KeyListener,
          for (int first=0; first < _sprites.size(); first++) {
 
              //get the first sprite to test for collision
-             AnimatedSprite spr1 = (AnimatedSprite) _sprites.get(first);
+             AnimatedSprite spr1 = _sprites.get(first);
              if (spr1.alive()) {
 
                  //look through all sprites again for collisions
@@ -308,8 +310,7 @@ abstract class Game extends Applet implements Runnable, KeyListener,
                      if (first != second) {
 
                          //get the second sprite to test for collision
-                         AnimatedSprite spr2 = (AnimatedSprite)
-                                               _sprites.get(second);
+                         AnimatedSprite spr2 = _sprites.get(second);
                          if (spr2.alive()) {
                              if (spr2.collidesWith(spr1)) {
                                  spriteCollision(spr1, spr2);
@@ -332,7 +333,7 @@ abstract class Game extends Applet implements Runnable, KeyListener,
      protected void drawSprites() {
          //draw sprites in reverse order (reverse priority)
          for (int n=_sprites.size()-1; n>-1; n--) {
-             AnimatedSprite spr = (AnimatedSprite) _sprites.get(n);
+             AnimatedSprite spr = _sprites.get(n);
              if (spr.alive()) {
                  spr.updateFrame();
                  spr.transform();
@@ -348,7 +349,7 @@ abstract class Game extends Applet implements Runnable, KeyListener,
       *****************************************************/
      private void purgeSprites() {
          for (int n=0; n < _sprites.size(); n++) {
-             AnimatedSprite spr = (AnimatedSprite) _sprites.get(n);
+             AnimatedSprite spr =  _sprites.get(n);
              if (!spr.alive()) {
                  _sprites.remove(n);
              }

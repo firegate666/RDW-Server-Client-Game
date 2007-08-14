@@ -7,6 +7,7 @@ package de.mb.engine;
 import java.applet.Applet;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Panel;
 import java.awt.image.BufferedImage;
 
 public class AnimatedSprite extends Sprite {

@@ -22,7 +22,7 @@ public class ChildMapFrame extends ChildFrame {
 	final static Logger log = Logger.getLogger(ChildMapFrame.class);
 	public ChildMapFrame(String title) {
 		super(title, "/resource/images/map.png");
-		setBounds(10, 10, 312, 220);
+		setBounds(800, 600, 312, 220);
 	}
 	
 }

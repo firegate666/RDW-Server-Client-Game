@@ -52,6 +52,7 @@ public class SimpleClient extends JFrame {
 
 		});
 
+
 		MenuItem m_exit = new MenuItem("Beenden");
 		m_exit.addActionListener(new ActionListener() {
 
@@ -111,6 +112,8 @@ public class SimpleClient extends JFrame {
 
 		// defaults
 		this.setVisible(false);
+
+		setUndecorated(true);
 		this.setBounds(50, 50, 800, 720);
 		this.setVisible(true);
 	}
@@ -131,6 +134,5 @@ public class SimpleClient extends JFrame {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-
 	}
 }
