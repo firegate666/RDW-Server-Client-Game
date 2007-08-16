@@ -25,9 +25,9 @@ public class DirectionalAnimatedSprite extends AnimatedSprite {
 	}
 
 	public void updateFrame() {
-		if (faceAngle() != lastKey) {
-			setCurrentFrame(0);
+		if (faceAngle() != lastKey && imageSequences.containsKey((int)faceAngle())) {
 			setAnimImage(imageSequences.get((int)faceAngle()).getImage());
+			lastKey = (int)faceAngle();
 		}
 		super.updateFrame();
 	}
