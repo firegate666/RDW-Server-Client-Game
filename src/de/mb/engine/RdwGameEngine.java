@@ -1,17 +1,18 @@
 package de.mb.engine;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 
 import javax.swing.DefaultDesktopManager;
-import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
+import javax.swing.JDialog;
 
 import com.sun.j3d.utils.applet.JMainFrame;
 
+import de.mb.rdw.swing.ChildCharacterFrame;
+import de.mb.rdw.swing.ChildFrame;
 import de.mb.rdw.swing.ChildMapFrame;
 
 /**
@@ -24,34 +25,23 @@ public class RdwGameEngine extends Game {
 
 	public final static int SPRITE_STATIC_OBJECT = 1;
 
+    protected ImageEntity[] barImage = new ImageEntity[2];
+    protected ImageEntity barFrame;
+
+    protected JMainFrame parentWindow;
+
+    ChildFrame characterFrame;
+
 	/**
 	 * show applet in Swing Frame
 	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		RdwGameEngine rdw = new RdwGameEngine(800, 600);
-		JMainFrame frame = new JMainFrame(rdw, 800, 600);
-		/*
-		JDesktopPane desk = new JDesktopPane();
-		desk.setDoubleBuffered(true);
-		desk.setOpaque(false);
-		desk.setDesktopManager(new DefaultDesktopManager());
-		frame.setContentPane(desk);
-		frame.getContentPane().setLayout(null);
-
-		JButton child = new JButton("Titel");
-		child.setVisible(true);
-		child.repaint();
-		child.setBounds(900, 600, 20, 20);
-		frame.getContentPane().add(child);
-
-		frame.getContentPane().add(rdw);
-		//rdw.setVisible(false);
-
-		frame.getContentPane().setComponentZOrder(rdw, 0);
-		frame.getContentPane().setComponentZOrder(child, 1);
-		*/
+		RdwGameEngine rdw = new RdwGameEngine(1024, 768);
+		JMainFrame frame = new JMainFrame(rdw, 1024, 768);
+		rdw.setParentWindow(frame);
+		//frame.setAlwaysOnTop(true);
 	}
 
 	public RdwGameEngine(int width, int height) {
@@ -124,6 +114,8 @@ public class RdwGameEngine extends Game {
 	 */
 	protected boolean keyctrl = false;
 
+	protected boolean keyc = false;
+
 	protected boolean showDebug = true;
 
 	/**
@@ -146,6 +138,12 @@ public class RdwGameEngine extends Game {
 			turn(5);
 		if (keyright)
 			turn(-5);
+		if (keyc) {
+			if (characterFrame == null)
+				characterFrame = new ChildCharacterFrame(parentWindow, "Charakterblatt");
+			characterFrame.setVisible(!characterFrame.isVisible());
+			keyc = false;
+		}
 	}
 
 	/**
@@ -182,10 +180,11 @@ public class RdwGameEngine extends Game {
 		if (keyCode == KeyEvent.VK_CONTROL)
 			keyctrl = false;
 
-		if (keyCode == KeyEvent.VK_D) {
+		if (keyCode == KeyEvent.VK_D)
 			showDebug = !showDebug;
-		}
 
+		if (keyCode == KeyEvent.VK_C)
+			keyc = true;
 	}
 
 	/**
@@ -223,6 +222,19 @@ public class RdwGameEngine extends Game {
 				getScreenHeight() - 1, 0 + (int) offset_x, 0 + (int) offset_y,
 				getScreenWidth() - 1 + (int) offset_x, getScreenHeight() - 1
 						+ (int) offset_y, this);
+
+        if (barFrame != null) {
+			g2d.drawImage(barFrame.getImage(), getScreenWidth() - 132, 18, this);
+	        for (int n = 0; n < 20; n++) {
+	            int dx = getScreenWidth() - 130 + n * 5;
+	            g2d.drawImage(barImage[0].getImage(), dx, 20, this);
+	        }
+	        g2d.drawImage(barFrame.getImage(), getScreenWidth() - 132, 33, this);
+	        for (int n = 0; n < 20; n++) {
+	            int dx = getScreenWidth() - 130 + n * 5;
+	            g2d.drawImage(barImage[1].getImage(), dx, 35, this);
+	        }
+        }
 
 		if (showDebug) {
 			g2d.setColor(Color.WHITE);
@@ -296,8 +308,16 @@ public class RdwGameEngine extends Game {
 		background = new ImageEntity(this);
 		background.load("/resource/sprites/tanaris.gif");
 
+		//load the health/shield bars
+        barFrame = new ImageEntity(this);
+        barFrame.load("/resource/sprites/barframe.png");
+        barImage[0] = new ImageEntity(this);
+        barImage[0].load("/resource/sprites/bar_health.png");
+        barImage[1] = new ImageEntity(this);
+        barImage[1].load("/resource/sprites/bar_shield.png");
+
 		ImageEntity shipImage = new ImageEntity(this);
-		shipImage.load("/resource/sprites/avatar.png");
+		shipImage.load("/resource/sprites/running_s.png");
 
 		ImageEntity castleImage = new ImageEntity(this);
 		castleImage.load("/resource/sprites/castle.gif");
@@ -305,10 +325,10 @@ public class RdwGameEngine extends Game {
 		AnimatedSprite ship = new AnimatedSprite(this, graphics());
 		ship.setSpriteType(RdwGameEngine.SPRITE_AVATAR);
 		ship.setAnimImage(shipImage.getImage());
-		ship.setFrameWidth(48);
-		ship.setFrameHeight(48);
-		ship.setTotalFrames(1);
-		ship.setColumns(1);
+		ship.setFrameWidth(96);
+		ship.setFrameHeight(96);
+		ship.setTotalFrames(8);
+		ship.setColumns(8);
 		ship.setPosition(new Point2D(200, 200));
 		ship.setAlive(true);
 		ship.setFrameDelay(4);
@@ -416,4 +436,19 @@ public class RdwGameEngine extends Game {
 		spr.setDrawposition(new Point2D((int) (spr.position().X() - offset_x),
 				(int) (spr.position().Y() - offset_y)));
 	}
+
+	/**
+	 * @return parentWindow
+	 */
+	public JMainFrame getParentWindow() {
+		return parentWindow;
+	}
+
+	/**
+	 * @param parentWindow Festzulegender parentWindow
+	 */
+	public void setParentWindow(JMainFrame parentWindow) {
+		this.parentWindow = parentWindow;
+	}
+
 }
