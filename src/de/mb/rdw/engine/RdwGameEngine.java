@@ -1,26 +1,33 @@
-package de.mb.engine;
+package de.mb.rdw.engine;
 
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 import javax.swing.DefaultDesktopManager;
 import javax.swing.JDesktopPane;
-import javax.swing.JDialog;
+import javax.xml.parsers.FactoryConfigurationError;
 
-import com.sun.j3d.utils.applet.JMainFrame;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
+
+import com.sun.j3d.utils.applet.MainFrame;
 
 import de.mb.rdw.swing.ChildCharacterFrame;
 import de.mb.rdw.swing.ChildFrame;
-import de.mb.rdw.swing.ChildMapFrame;
+import de.mb.util.WebstartFileProvider;
+
 
 /**
  * @author Jonathan S. Harbour
  * @author Marco Behnke
  */
 public class RdwGameEngine extends Game {
-
+	final static Logger log = Logger.getLogger(RdwGameEngine.class);
 	public final static int SPRITE_AVATAR = 0;
 
 	public final static int SPRITE_STATIC_OBJECT = 1;
@@ -28,7 +35,7 @@ public class RdwGameEngine extends Game {
     protected ImageEntity[] barImage = new ImageEntity[2];
     protected ImageEntity barFrame;
 
-    protected JMainFrame parentWindow;
+    protected MainFrame parentWindow;
 
     ChildFrame characterFrame;
 
@@ -38,21 +45,25 @@ public class RdwGameEngine extends Game {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		RdwGameEngine rdw = new RdwGameEngine(1024, 768);
-		JMainFrame frame = new JMainFrame(rdw, 1024, 768);
-		rdw.setParentWindow(frame);
-		//frame.setAlwaysOnTop(true);
+		LogManager.resetConfiguration();
+		try {
+			DOMConfigurator.configure(WebstartFileProvider.getFile(
+					"log4j-config.xml").toURL());
+			RdwGameEngine rdw = new RdwGameEngine(1024, 768);
+			MainFrame frame = new MainFrame(rdw, 1024, 768);
+			rdw.setParentWindow(frame);
+			//frame.setAlwaysOnTop(true);
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		} catch (FactoryConfigurationError e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	public RdwGameEngine(int width, int height) {
 		super(60, width, height);
-		JDesktopPane desk = new JDesktopPane();
-		desk.setDoubleBuffered(true);
-		desk.setOpaque(false);
-		desk.setDesktopManager(new DefaultDesktopManager());
-		desk.setLayout(null);
-		setContentPane(desk);
-
 	}
 
 	/**
@@ -82,12 +93,12 @@ public class RdwGameEngine extends Game {
 
 	protected double world_x = 2000;
 
-	protected double world_y = 2000;
+	protected double world_y = 1352;
 
 	/**
 	 * default walking speed
 	 */
-	protected int default_speed = 2;
+	protected int default_speed = 1;
 
 	/**
 	 * is key event "key up"?
@@ -143,6 +154,7 @@ public class RdwGameEngine extends Game {
 				characterFrame = new ChildCharacterFrame(parentWindow, "Charakterblatt");
 			characterFrame.setVisible(!characterFrame.isVisible());
 			keyc = false;
+			this.requestFocus();
 		}
 	}
 
@@ -211,8 +223,6 @@ public class RdwGameEngine extends Game {
 
 	}
 
-	protected ChildMapFrame child;
-
 	/**
 	 * @see Game#gameRefreshScreen()
 	 */
@@ -246,7 +256,7 @@ public class RdwGameEngine extends Game {
 			g2d.drawString(
 					"Steuerung mit Pfeiltasten (vorwärts, rückwärts, drehen)",
 					10, getScreenHeight() - 30);
-			g2d.drawString("Rennen mit STRG", 10, getScreenHeight() - 20);
+			g2d.drawString("Rennen mit STRG, Charakterblatt mit C", 10, getScreenHeight() - 20);
 			g2d.drawString("Slide: " + (int) offset_x + ":" + (int) offset_y,
 					10, getScreenHeight() - 10);
 		}
@@ -305,6 +315,7 @@ public class RdwGameEngine extends Game {
 	 * @see Game#gameStartup()
 	 */
 	public void gameStartup() {
+		log.info("Game Startup");
 		pauseGame();
 		applet().requestFocus(); // get focus, so we don't need to click to start playing
 		applet().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
@@ -444,14 +455,14 @@ public class RdwGameEngine extends Game {
 	/**
 	 * @return parentWindow
 	 */
-	public JMainFrame getParentWindow() {
+	public MainFrame getParentWindow() {
 		return parentWindow;
 	}
 
 	/**
 	 * @param parentWindow Festzulegender parentWindow
 	 */
-	public void setParentWindow(JMainFrame parentWindow) {
+	public void setParentWindow(MainFrame parentWindow) {
 		this.parentWindow = parentWindow;
 	}
 

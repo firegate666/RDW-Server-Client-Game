@@ -1,4 +1,4 @@
-package de.mb.engine;
+package de.mb.rdw.engine;
 /*********************************************************
  * Base game image class for bitmapped game entities
  **********************************************************/
@@ -18,7 +18,7 @@ public class ImageEntity extends BaseGameEntity {
     protected Graphics2D g2d;
 
     //default constructor
-    ImageEntity(Applet a) {
+    public ImageEntity(Applet a) {
         applet = a;
         setImage(null);
         setAlive(true);

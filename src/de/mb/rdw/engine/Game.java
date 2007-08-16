@@ -1,9 +1,4 @@
-package de.mb.engine;
-/*****************************************************
-* Beginning Java 5 Game Programming
-* by Jonathan S. Harbour
-* Applet Game Framework class
-*****************************************************/
+package de.mb.rdw.engine;
 
 import java.applet.Applet;
 import java.awt.Graphics;
@@ -16,10 +11,18 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
-import javax.swing.JApplet;
+import org.apache.log4j.Logger;
 
-abstract class Game extends JApplet implements Runnable, KeyListener,
+/*****************************************************
+* Beginning Java 5 Game Programming
+* by Jonathan S. Harbour
+* Applet Game Framework class
+*****************************************************/
+
+public abstract class Game extends Applet implements Runnable, KeyListener,
     MouseListener, MouseMotionListener {
+
+	final static Logger log = Logger.getLogger(Game.class);
 
     //the main game loop thread
     private Thread gameloop;
@@ -53,19 +56,19 @@ abstract class Game extends JApplet implements Runnable, KeyListener,
     public void resumeGame() { _gamePaused = false; }
 
     //declare the game event methods that sub-class must implement
-    abstract void gameStartup();
-    abstract void gameTimedUpdate();
-    abstract void gameRefreshScreen();
-    abstract void gameShutdown();
-    abstract void gameKeyDown(int keyCode);
-    abstract void gameKeyUp(int keyCode);
-    abstract void gameMouseDown();
-    abstract void gameMouseUp();
-    abstract void gameMouseMove();
-    abstract void spriteUpdate(AnimatedSprite sprite);
-    abstract void spriteDraw(AnimatedSprite sprite);
-    abstract void spriteDying(AnimatedSprite sprite);
-    abstract void spriteCollision(AnimatedSprite spr1, AnimatedSprite spr2);
+    protected abstract void gameStartup();
+    protected abstract void gameTimedUpdate();
+    protected abstract void gameRefreshScreen();
+    protected abstract void gameShutdown();
+    protected abstract void gameKeyDown(int keyCode);
+    protected abstract void gameKeyUp(int keyCode);
+    protected abstract void gameMouseDown();
+    protected abstract void gameMouseUp();
+    protected abstract void gameMouseMove();
+    protected abstract void spriteUpdate(AnimatedSprite sprite);
+    protected abstract void spriteDraw(AnimatedSprite sprite);
+    protected abstract void spriteDying(AnimatedSprite sprite);
+    protected abstract void spriteCollision(AnimatedSprite spr1, AnimatedSprite spr2);
 
     /*****************************************************
      * constructor
@@ -90,6 +93,7 @@ abstract class Game extends JApplet implements Runnable, KeyListener,
      * applet init event method
      *****************************************************/
     public void init() {
+    	log.info("Init Game");
         //create the back buffer and drawing surface
         backbuffer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
         g2d = backbuffer.createGraphics();
@@ -104,6 +108,7 @@ abstract class Game extends JApplet implements Runnable, KeyListener,
 
         //this method implemented by sub-class
         gameStartup();
+        update(g2d);
     }
 
     /*****************************************************

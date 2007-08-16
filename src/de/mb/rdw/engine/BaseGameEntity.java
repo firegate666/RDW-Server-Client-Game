@@ -1,4 +1,4 @@
-package de.mb.engine;
+package de.mb.rdw.engine;
 /*********************************************************
  * Base game entity class
  **********************************************************/
@@ -35,7 +35,7 @@ public class BaseGameEntity extends Object {
     public void incMoveAngle(double i) { this.moveAngle += i; }
 
     //default constructor
-    BaseGameEntity() {
+    public BaseGameEntity() {
         setAlive(false);
         setX(0.0);
         setY(0.0);

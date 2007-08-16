@@ -1,4 +1,4 @@
-package de.mb.engine;
+package de.mb.rdw.engine;
 /*********************************************************
  * Beginning Java 5 Game Programming
  * by Jonathan S. Harbour
@@ -22,7 +22,7 @@ public class Sprite extends Object {
     protected int _lifespan, _lifeage;
 
     //constructor
-    Sprite(Applet a, Graphics2D g2d) {
+    public Sprite(Applet a, Graphics2D g2d) {
         entity = new ImageEntity(a);
         entity.setGraphics(g2d);
         entity.setAlive(false);

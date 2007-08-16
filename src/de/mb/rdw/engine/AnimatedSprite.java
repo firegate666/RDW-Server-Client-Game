@@ -1,4 +1,4 @@
-package de.mb.engine;
+package de.mb.rdw.engine;
 /*****************************************************
 * Beginning Java 5 Game Programming
 * by Jonathan S. Harbour
