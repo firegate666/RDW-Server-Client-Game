@@ -21,50 +21,24 @@ import de.mb.rdw.swing.ChildCharacterFrame;
 import de.mb.rdw.swing.ChildFrame;
 import de.mb.util.WebstartFileProvider;
 
-
 /**
  * @author Jonathan S. Harbour
  * @author Marco Behnke
  */
 public class RdwGameEngine extends Game {
 	final static Logger log = Logger.getLogger(RdwGameEngine.class);
+
 	public final static int SPRITE_AVATAR = 0;
 
 	public final static int SPRITE_STATIC_OBJECT = 1;
 
-    protected ImageEntity[] barImage = new ImageEntity[2];
-    protected ImageEntity barFrame;
+	protected ImageEntity[] barImage = new ImageEntity[2];
 
-    protected MainFrame parentWindow;
+	protected ImageEntity barFrame;
 
-    ChildFrame characterFrame;
+	protected MainFrame parentWindow;
 
-	/**
-	 * show applet in Swing Frame
-	 *
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		LogManager.resetConfiguration();
-		try {
-			DOMConfigurator.configure(WebstartFileProvider.getFile(
-					"log4j-config.xml").toURL());
-			RdwGameEngine rdw = new RdwGameEngine(1024, 768);
-			MainFrame frame = new MainFrame(rdw, 1024, 768);
-			rdw.setParentWindow(frame);
-			//frame.setAlwaysOnTop(true);
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-		} catch (FactoryConfigurationError e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-	}
-
-	public RdwGameEngine(int width, int height) {
-		super(60, width, height);
-	}
+	ChildFrame characterFrame;
 
 	/**
 	 * backgroundmap
@@ -100,6 +74,8 @@ public class RdwGameEngine extends Game {
 	 */
 	protected int default_speed = 1;
 
+	protected int rotationAngle = 45;
+
 	/**
 	 * is key event "key up"?
 	 */
@@ -130,14 +106,43 @@ public class RdwGameEngine extends Game {
 	protected boolean showDebug = true;
 
 	/**
+	 * show applet in Swing Frame
+	 *
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		LogManager.resetConfiguration();
+		try {
+			DOMConfigurator.configure(WebstartFileProvider.getFile(
+					"log4j-config.xml").toURL());
+			RdwGameEngine rdw = new RdwGameEngine(1024, 768);
+			MainFrame frame = new MainFrame(rdw, 1024, 768);
+			rdw.setParentWindow(frame);
+			// frame.setAlwaysOnTop(true);
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		} catch (FactoryConfigurationError e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	public RdwGameEngine(int width, int height) {
+		super(60, width, height);
+	}
+
+	/**
 	 * check key events
 	 *
 	 */
 	protected void checkkeys() {
+		// speed control
 		int speed = default_speed;
 		if (keyctrl)
 			speed = speed * 2;
 
+		// move control
 		if (keyup)
 			walk(-speed);
 		else if (keydown)
@@ -145,13 +150,21 @@ public class RdwGameEngine extends Game {
 		else
 			walk(0);
 
-		if (keyleft)
-			turn(5);
-		if (keyright)
-			turn(-5);
+		// turn control
+		if (keyleft) {
+			keyleft = false;
+			turn(rotationAngle);
+		}
+		if (keyright) {
+			keyright = false;
+			turn(-rotationAngle);
+		}
+
+		// additionals
 		if (keyc) {
 			if (characterFrame == null)
-				characterFrame = new ChildCharacterFrame(parentWindow, "Charakterblatt");
+				characterFrame = new ChildCharacterFrame(parentWindow,
+						"Charakterblatt");
 			characterFrame.setVisible(!characterFrame.isVisible());
 			keyc = false;
 			this.requestFocus();
@@ -166,10 +179,6 @@ public class RdwGameEngine extends Game {
 			keyup = true;
 		if (keyCode == KeyEvent.VK_DOWN)
 			keydown = true;
-		if (keyCode == KeyEvent.VK_LEFT)
-			keyleft = true;
-		if (keyCode == KeyEvent.VK_RIGHT)
-			keyright = true;
 		if (keyCode == KeyEvent.VK_CONTROL)
 			keyctrl = true;
 
@@ -185,9 +194,11 @@ public class RdwGameEngine extends Game {
 			keydown = false;
 
 		if (keyCode == KeyEvent.VK_LEFT)
-			keyleft = false;
+			keyleft = true;
+		;
+
 		if (keyCode == KeyEvent.VK_RIGHT)
-			keyright = false;
+			keyright = true;
 
 		if (keyCode == KeyEvent.VK_CONTROL)
 			keyctrl = false;
@@ -235,18 +246,22 @@ public class RdwGameEngine extends Game {
 				getScreenWidth() - 1 + (int) offset_x, getScreenHeight() - 1
 						+ (int) offset_y, this);
 
-        if (barFrame != null) {
-			g2d.drawImage(barFrame.getImage(), getScreenWidth() - 132, 18, this);
-	        for (int n = 0; n < 20; n++) {
-	            int dx = getScreenWidth() - 130 + n * 5;
-	            g2d.drawImage(barImage[0].getImage(), dx, 20, this);
-	        }
-	        g2d.drawImage(barFrame.getImage(), getScreenWidth() - 132, 33, this);
-	        for (int n = 0; n < 20; n++) {
-	            int dx = getScreenWidth() - 130 + n * 5;
-	            g2d.drawImage(barImage[1].getImage(), dx, 35, this);
-	        }
-        }
+		if (barFrame != null) {
+			g2d
+					.drawImage(barFrame.getImage(), getScreenWidth() - 132, 18,
+							this);
+			for (int n = 0; n < 20; n++) {
+				int dx = getScreenWidth() - 130 + n * 5;
+				g2d.drawImage(barImage[0].getImage(), dx, 20, this);
+			}
+			g2d
+					.drawImage(barFrame.getImage(), getScreenWidth() - 132, 33,
+							this);
+			for (int n = 0; n < 20; n++) {
+				int dx = getScreenWidth() - 130 + n * 5;
+				g2d.drawImage(barImage[1].getImage(), dx, 35, this);
+			}
+		}
 
 		if (showDebug) {
 			g2d.setColor(Color.WHITE);
@@ -256,7 +271,8 @@ public class RdwGameEngine extends Game {
 			g2d.drawString(
 					"Steuerung mit Pfeiltasten (vorwärts, rückwärts, drehen)",
 					10, getScreenHeight() - 30);
-			g2d.drawString("Rennen mit STRG, Charakterblatt mit C", 10, getScreenHeight() - 20);
+			g2d.drawString("Rennen mit STRG, Charakterblatt mit C", 10,
+					getScreenHeight() - 20);
 			g2d.drawString("Slide: " + (int) offset_x + ":" + (int) offset_y,
 					10, getScreenHeight() - 10);
 		}
@@ -272,6 +288,8 @@ public class RdwGameEngine extends Game {
 		avatar.setFaceAngle(avatar.faceAngle() - angle);
 		if (avatar.faceAngle() < 0)
 			avatar.setFaceAngle(360 - angle);
+		if (avatar.faceAngle() == 360)
+			avatar.setFaceAngle(0);
 
 	}
 
@@ -317,35 +335,62 @@ public class RdwGameEngine extends Game {
 	public void gameStartup() {
 		log.info("Game Startup");
 		pauseGame();
-		applet().requestFocus(); // get focus, so we don't need to click to start playing
+		applet().requestFocus(); // get focus, so we don't need to click to
+									// start playing
 		applet().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		background = new ImageEntity(this);
 		background.load("/resource/sprites/tanaris.gif");
 
-		//load the health/shield bars
-        barFrame = new ImageEntity(this);
-        barFrame.load("/resource/sprites/barframe.png");
-        barImage[0] = new ImageEntity(this);
-        barImage[0].load("/resource/sprites/bar_health.png");
-        barImage[1] = new ImageEntity(this);
-        barImage[1].load("/resource/sprites/bar_shield.png");
+		// load the health/shield bars
+		barFrame = new ImageEntity(this);
+		barFrame.load("/resource/sprites/barframe.png");
+		barImage[0] = new ImageEntity(this);
+		barImage[0].load("/resource/sprites/bar_health.png");
+		barImage[1] = new ImageEntity(this);
+		barImage[1].load("/resource/sprites/bar_shield.png");
 
 		ImageEntity shipImage = new ImageEntity(this);
-		shipImage.load("/resource/sprites/running_s.png");
+		shipImage.load("/resource/sprites/horse_walking_south.png");
 
 		ImageEntity castleImage = new ImageEntity(this);
 		castleImage.load("/resource/sprites/castle.gif");
 
-		AnimatedSprite ship = new AnimatedSprite(this, graphics());
+		/*
+		 * AnimatedSprite ship = new AnimatedSprite(this, graphics());
+		 * ship.setSpriteType(RdwGameEngine.SPRITE_AVATAR);
+		 * ship.setAnimImage(shipImage.getImage()); ship.setFrameWidth(144);
+		 * ship.setFrameHeight(144); ship.setTotalFrames(12);
+		 * ship.setColumns(12); ship.setPosition(new Point2D(200, 200));
+		 * ship.setAlive(true); ship.setFrameDelay(4); sprites().add(ship);
+		 */
+
+		ImageEntity ships = new ImageEntity(this);
+		ships.load("/resource/sequences/walking_s0000.png");
+
+		DirectionalAnimatedSprite ship = new DirectionalAnimatedSprite(this,
+				graphics());
 		ship.setSpriteType(RdwGameEngine.SPRITE_AVATAR);
-		ship.setAnimImage(shipImage.getImage());
-		ship.setFrameWidth(96);
-		ship.setFrameHeight(96);
-		ship.setTotalFrames(8);
-		ship.setColumns(8);
+		ship.setAnimImage(ships.getImage());
+		ship.setFrameWidth(144);
+		ship.setFrameHeight(144);
+		ship.setTotalFrames(12);
+		ship.setColumns(12);
 		ship.setPosition(new Point2D(200, 200));
 		ship.setAlive(true);
 		ship.setFrameDelay(4);
+
+		ship.loadImageSequence("/resource/sequences/walking_n0000.png", 180);
+		// ship.loadImageSequence("/resource/sequences/walking_ne0000.png",
+		// 225);
+		// ship.loadImageSequence("/resource/sequences/walking_nw0000.png",
+		// 135);
+		ship.loadImageSequence("/resource/sequences/walking_s0000.png", 0);
+		// ship.loadImageSequence("/resource/sequences/walking_se0000.png",
+		// 315);
+		// ship.loadImageSequence("/resource/sequences/walking_sw0000.png", 45);
+		ship.loadImageSequence("/resource/sequences/walking_e0000.png", 270);
+		ship.loadImageSequence("/resource/sequences/walking_w0000.png", 90);
+
 		sprites().add(ship);
 
 		AnimatedSprite castle = new AnimatedSprite(this, graphics());
@@ -419,8 +464,8 @@ public class RdwGameEngine extends Game {
 
 			if (spr.position().X() >= world_x - 100) // hard limit
 				spr.position().setX(world_x - 100);
-			else if (spr.position().X() >= world_x
-					- getScreenWidth() / 2) { // stop scrolling
+			else if (spr.position().X() >= world_x - getScreenWidth() / 2) { // stop
+																				// scrolling
 				// spr.position().setX(background.width() - getScreenWidth()/2);
 			} else if (spr.position().X() > getScreenWidth() - getScreenWidth()
 					/ 2) { // update offset
@@ -429,10 +474,10 @@ public class RdwGameEngine extends Game {
 			}
 
 			if (spr.position().Y() >= world_y - 100) // hard
-																	// limit
+				// limit
 				spr.position().setY(world_y - 100);
-			else if (spr.position().Y() >= world_y
-					- getScreenHeight() / 2) { // stop scrolling
+			else if (spr.position().Y() >= world_y - getScreenHeight() / 2) { // stop
+																				// scrolling
 				// spr.position().setY(background.height() -
 				// getScreenHeight()/2);
 			} else if (spr.position().Y() > getScreenHeight()
@@ -460,7 +505,8 @@ public class RdwGameEngine extends Game {
 	}
 
 	/**
-	 * @param parentWindow Festzulegender parentWindow
+	 * @param parentWindow
+	 *            Festzulegender parentWindow
 	 */
 	public void setParentWindow(MainFrame parentWindow) {
 		this.parentWindow = parentWindow;
