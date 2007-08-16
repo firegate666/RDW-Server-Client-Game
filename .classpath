@@ -3,24 +3,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="config"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/j3dcore.jar" sourcepath="C:/Documents and Settings/Marco/My Documents/j3d-1_5_1-src.zip">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Documents and Settings/Marco/My Documents/java3d-1_5_1-api-docs.zip!/java3d-1_5_1-api-docs"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/j3dutils.jar" sourcepath="C:/Documents and Settings/Marco/My Documents/j3d-1_5_1-src.zip">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:file:/C:/Documents and Settings/Marco/My Documents/java3d-1_5_1-api-docs.zip!/java3d-1_5_1-api-docs"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/joalmixer.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Documents and Settings/Marco/My Documents/java3d-1_5_1-api-docs.zip!/java3d-1_5_1-api-docs"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/vecmath.jar" sourcepath="C:/Documents and Settings/Marco/My Documents/vecmath-1_5_1-src.zip">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Documents and Settings/Marco/My Documents/java3d-1_5-spec.zip!/java3d-1_5-spec"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/log4j-1.2.14.jar"/>

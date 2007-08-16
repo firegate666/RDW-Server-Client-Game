@@ -28,7 +28,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
-import de.mb.engine.RdwGameEngine;
+import de.mb.rdw.engine.RdwGameEngine;
 import de.mb.rdw.swing.ChildCharacterFrame;
 import de.mb.rdw.swing.ChildHelperFrame;
 import de.mb.rdw.swing.ChildMapFrame;
