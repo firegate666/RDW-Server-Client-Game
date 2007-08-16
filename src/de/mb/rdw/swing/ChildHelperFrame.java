@@ -17,7 +17,7 @@ import de.mb.rdw.HelpProperties;
 public class ChildHelperFrame extends ChildFrame {
 	final static Logger log = Logger.getLogger(ChildHelperFrame.class);
 	public ChildHelperFrame(Frame owner, String title) {
-		super(owner, title, null);
+		super(owner, title, "/resource/images/pergament.jpg");
 		banner.setLayout(null);
 		JLabel text = new JLabel();
 		text = new JLabel(HelpProperties.getString("Helper.start")); //$NON-NLS-1$
