@@ -5,9 +5,9 @@ package de.mb.engine;
 * AnimatedSprite class
 *****************************************************/
 import java.applet.Applet;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Panel;
 import java.awt.image.BufferedImage;
 
 public class AnimatedSprite extends Sprite {
@@ -93,7 +93,7 @@ public class AnimatedSprite extends Sprite {
     }
 
     public void updateFrame() {
-        if (totFrames > 0) {
+       if (totFrames > 0) {
             //calculate the current frame's X and Y position
             int frameX = (currentFrame() % columns()) * frameWidth();
             int frameY = (currentFrame() / columns()) * frameHeight();
@@ -103,7 +103,9 @@ public class AnimatedSprite extends Sprite {
                                               BufferedImage.TYPE_INT_ARGB);
                 tempSurface = tempImage.createGraphics();
             }
-
+            // clear surface, to fully support transparency
+            tempSurface.setBackground(new Color(0,0,0,0));
+            tempSurface.clearRect(0, 0, frameWidth(), frameHeight());
             //copy the frame onto the temp image
             if (animImage.getImage() != null) {
                 tempSurface.drawImage(animImage.getImage(), 0, 0, frameWidth() - 1,
@@ -115,6 +117,5 @@ public class AnimatedSprite extends Sprite {
             super.setImage(tempImage);
         }
     }
-
 }
 
