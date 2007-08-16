@@ -217,6 +217,8 @@ public class RdwGameEngine extends Game {
 	 * @see Game#gameRefreshScreen()
 	 */
 	public void gameRefreshScreen() {
+		if (gamePaused())
+			return;
 		// draw the background
 		g2d.drawImage(background.getImage(), 0, 0, getScreenWidth() - 1,
 				getScreenHeight() - 1, 0 + (int) offset_x, 0 + (int) offset_y,
@@ -303,6 +305,7 @@ public class RdwGameEngine extends Game {
 	 * @see Game#gameStartup()
 	 */
 	public void gameStartup() {
+		pauseGame();
 		applet().requestFocus(); // get focus, so we don't need to click to start playing
 		applet().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		background = new ImageEntity(this);
@@ -347,6 +350,7 @@ public class RdwGameEngine extends Game {
 		castle2.setPosition(new Point2D(838 * 2, 988 * 2));
 		castle2.setAlive(true);
 		sprites().add(castle2);
+		resumeGame();
 	}
 
 	/**
