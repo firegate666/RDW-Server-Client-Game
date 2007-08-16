@@ -82,7 +82,7 @@ public class AnimatedSprite extends Sprite {
         if (frCount > frDelay) {
             frCount = 0;
             //update the animation frame
-            currFrame += animDir;
+            currFrame += animDir*-1;
             if (currFrame > totFrames - 1) {
                 currFrame = 0;
             }
