@@ -2,6 +2,7 @@ package de.mb.rdw.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,9 +15,9 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
@@ -36,24 +37,20 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 
 	protected GameCharacter character = new GameCharacter();
 
-	protected JPanel mainpanel = new TransparentPanel();
+	protected TransparentPanel mainpanel = new TransparentPanel();
 
-	protected JPanel[] container;
+	protected TransparentPanel[] container;
 
 	protected String basetitle;
 
 	protected int act_container = 0;
 
-	public ChildCharacterFrame(String title) {
-		this(title, false);
-	}
-
-	public ChildCharacterFrame(String title, boolean iconifiable) {
-		super(title);
+	public ChildCharacterFrame(Frame owner, String title) {
+		super(owner, title, "/resource/images/pergament.jpg");
 		basetitle = title;
 		banner.setLayout(null);
-		setIconifiable(iconifiable);
-		setClosable(true);
+		//setIconifiable(iconifiable);
+		//setClosable(true);
 		initPanels();
 	}
 
@@ -71,13 +68,13 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		mainpanel.add(getBottomPanel(), BorderLayout.SOUTH);
 
 		int i = 0;
-		container = new JPanel[] { getDataPanel(), getAttributePanel(),
+		container = new TransparentPanel[] { getDataPanel(), getAttributePanel(),
 				getMagicPanel(), getEquipmentPanel(), getExperiencePanel(), };
 		mainpanel.add(container[act_container], BorderLayout.CENTER);
 		mainpanel.updateUI();
 	}
 
-	public JPanel getTopPanel() {
+	public TransparentPanel getTopPanel() {
 		TransparentPanel panel = new TransparentPanel(new GridLayout(2, 2));
 
 		TransparentLabel label_name = new TransparentLabel("Name:");
@@ -140,7 +137,7 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		mainpanel.updateUI();
 	}
 
-	public JPanel getBottomPanel() {
+	public TransparentPanel getBottomPanel() {
 		TransparentPanel panel = new TransparentPanel(new GridLayout(1, 5));
 
 		TransparentButton prev = new TransparentButton();
@@ -184,7 +181,7 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		return panel;
 	}
 
-	public JPanel getExperiencePanel() {
+	public TransparentPanel getExperiencePanel() {
 		TransparentPanel panel = new TransparentPanel(null);
 
 		TransparentLabel header = new TransparentLabel("Stufe und Erfahrung");
@@ -221,7 +218,7 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		return panel;
 	}
 
-	public JPanel getMagicPanel() {
+	public TransparentPanel getMagicPanel() {
 		TransparentPanel panel = new TransparentPanel(null);
 
 		TransparentLabel header = new TransparentLabel("Magie");
@@ -231,7 +228,7 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		return panel;
 	}
 
-	public JPanel getEquipmentPanel() {
+	public TransparentPanel getEquipmentPanel() {
 		TransparentPanel panel = new TransparentPanel(null);
 
 		TransparentLabel header = new TransparentLabel("Ausrüstung");
@@ -252,7 +249,7 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		return panel;
 	}
 
-	public JPanel getDataPanel() {
+	public TransparentPanel getDataPanel() {
 		TransparentPanel panel = new TransparentPanel(null);
 
 		TransparentLabel header = new TransparentLabel("Allgemeine Daten");
@@ -331,7 +328,7 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		return panel;
 	}
 
-	public JPanel getAttributePanel() {
+	public TransparentPanel getAttributePanel() {
 		TransparentPanel panel = new TransparentPanel(null);
 
 		TransparentLabel header = new TransparentLabel("Attribute");
@@ -471,6 +468,6 @@ public class ChildCharacterFrame extends ChildFrame implements ActionListener {
 		} else
 			log.warn("unknown action command");
 
-	}
+	}}
 
-}
+

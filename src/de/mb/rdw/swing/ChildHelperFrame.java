@@ -1,6 +1,7 @@
 package de.mb.rdw.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Frame;
 
 import javax.swing.JLabel;
 
@@ -15,8 +16,8 @@ import de.mb.rdw.HelpProperties;
  */
 public class ChildHelperFrame extends ChildFrame {
 	final static Logger log = Logger.getLogger(ChildHelperFrame.class);
-	public ChildHelperFrame(String title) {
-		super(title);
+	public ChildHelperFrame(Frame owner, String title) {
+		super(owner, title, null);
 		banner.setLayout(null);
 		JLabel text = new JLabel();
 		text = new JLabel(HelpProperties.getString("Helper.start")); //$NON-NLS-1$
