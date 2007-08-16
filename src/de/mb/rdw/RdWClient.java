@@ -126,22 +126,22 @@ public class RdWClient extends JFrame {
 		character.setBounds(getWidth() - 96, getHeight() - 48, 48, 48);
 		character.setBorder(BorderFactory.createEmptyBorder());
 		character.setMargin(new Insets(0, 0, 0, 0));
-		character.addActionListener(new ActionListener() {
+		/*character.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				ChildCharacterFrame temp = new ChildCharacterFrame("Charakterblatt");
-				addChild(temp, 300, 300, false);
+				//addChild(temp, 300, 300, false);
 			}
 
-		});
+		});*/
 		getContentPane().add(character);
 
-		ChildHelperFrame child2 = new ChildHelperFrame("Hilfe");
-		this.addChild(child2, 150, 150, true);
+		/*ChildHelperFrame child2 = new ChildHelperFrame("Hilfe");
+		//this.addChild(child2, 150, 150, true);
 
 		ChildMapFrame child3 = new ChildMapFrame("Map");
-		this.addChild(child3, 300, 300, true);
-
+		//this.addChild(child3, 300, 300, true);
+*/
 		RdwGameEngine game = new RdwGameEngine(800, 600);
 		game.init();
 		int width = 800;

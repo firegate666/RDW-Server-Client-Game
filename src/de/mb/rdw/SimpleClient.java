@@ -42,15 +42,15 @@ public class SimpleClient extends JFrame {
 		MenuBar mb = new MenuBar();
 		Menu m = new Menu("Datei");
 		MenuItem m_neu = new MenuItem("Neu");
-		m_neu.addActionListener(new ActionListener() {
+		/*m_neu.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				ChildCharacterFrame temp = new ChildCharacterFrame(
 						"Charakterblatt", true);
-				addChild(temp, 25, 25, false);
+				//addChild(temp, 25, 25, false);
 			}
 
-		});
+		});*/
 
 
 		MenuItem m_exit = new MenuItem("Beenden");
