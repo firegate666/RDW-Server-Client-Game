@@ -142,7 +142,7 @@ public class RdWClient extends JFrame {
 		ChildMapFrame child3 = new ChildMapFrame("Map");
 		//this.addChild(child3, 300, 300, true);
 */
-		RdwGameEngine game = new RdwGameEngine(800, 600);
+		RdwGameEngine game = new RdwGameEngine(800, 600, new GameController());
 		game.init();
 		int width = 800;
 		int height = 600;
