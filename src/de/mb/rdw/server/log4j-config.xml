@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd"> 
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+   <!-- ============================== -->
+   <!-- Append messages to the console -->
+   <!-- ============================== -->
+
+   <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+      <param name="Target" value="System.out"/>
+      <param name="Threshold" value="INFO"/>
+
+      <layout class="org.apache.log4j.PatternLayout">
+         <!-- The default pattern: Date Priority [Category] Message\n -->
+         <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p[%c{1}] %m%n"/>
+      </layout>
+   </appender>
+   
+   <appender name="INFOFILELOGGER" class="org.apache.log4j.RollingFileAppender">
+      <param name="file" value="${user.home}/rdw/infofile.log"/>
+	  <param name="MaxFileSize" value="100MB"/>
+	  <param name="MaxBackupIndex" value="10"/>
+      <param name="Threshold" value="INFO"/>
+
+      <layout class="org.apache.log4j.PatternLayout">
+         <!-- The default pattern: Date Priority [Category] Message\n -->
+         <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p[%c{1}] %m%n"/>
+      </layout>
+   </appender>   
+
+   <appender name="DEBUGFILELOGGER" class="org.apache.log4j.RollingFileAppender">
+      <param name="file" value="${user.home}/rdw/debugfile.log"/>
+	  <param name="MaxFileSize" value="1000MB"/>
+	  <param name="MaxBackupIndex" value="10"/>
+      <param name="Threshold" value="DEBUG"/>
+
+      <layout class="org.apache.log4j.PatternLayout">
+         <!-- The default pattern: Date Priority [Category] Message\n -->
+         <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p[%c{1}] %m%n"/>
+      </layout>
+   </appender>      
+   <!-- ================ -->
+   <!-- Limit categories -->
+   <!-- ================ -->
+
+   <!-- Limit the org.apache category to INFO as its DEBUG is verbose -->
+   <category name="org.apache">
+      <priority value="INFO"/>
+   </category>
+
+   <!-- Limit JBoss categories to INFO -->
+   <category name="org.jboss">
+     <priority value="INFO"/>
+   </category>
+
+   <!-- ======================= -->
+   <!-- Setup the Root category -->
+   <!-- ======================= -->
+
+   <root>
+      <appender-ref ref="CONSOLE"/>
+      <appender-ref ref="INFOFILELOGGER"/>
+      <appender-ref ref="DEBUGFILELOGGER"/>
+   </root>
+
+</log4j:configuration>
