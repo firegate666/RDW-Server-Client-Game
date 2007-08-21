@@ -7,8 +7,6 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import javax.swing.DefaultDesktopManager;
-import javax.swing.JDesktopPane;
 import javax.xml.parsers.FactoryConfigurationError;
 
 import org.apache.log4j.LogManager;
@@ -17,6 +15,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 import com.sun.j3d.utils.applet.MainFrame;
 
+import de.mb.rdw.GameController;
 import de.mb.rdw.swing.ChildCharacterFrame;
 import de.mb.rdw.swing.ChildFrame;
 import de.mb.util.WebstartFileProvider;
@@ -25,8 +24,11 @@ import de.mb.util.WebstartFileProvider;
  * @author Jonathan S. Harbour
  * @author Marco Behnke
  */
+
 public class RdwGameEngine extends Game {
 	final static Logger log = Logger.getLogger(RdwGameEngine.class);
+
+	protected GameController controller;
 
 	public final static int SPRITE_AVATAR = 0;
 
@@ -37,8 +39,6 @@ public class RdwGameEngine extends Game {
 	protected ImageEntity barFrame;
 
 	protected MainFrame parentWindow;
-
-	ChildFrame characterFrame;
 
 	/**
 	 * backgroundmap
@@ -74,7 +74,7 @@ public class RdwGameEngine extends Game {
 	 */
 	protected int default_speed = 1;
 
-	protected int rotationAngle = 45;
+	protected int rotationAngle = 5;
 
 	/**
 	 * is key event "key up"?
@@ -115,7 +115,7 @@ public class RdwGameEngine extends Game {
 		try {
 			DOMConfigurator.configure(WebstartFileProvider.getFile(
 					"log4j-config.xml").toURL());
-			RdwGameEngine rdw = new RdwGameEngine(1024, 768);
+			RdwGameEngine rdw = new RdwGameEngine(1024, 768, new GameController());
 			MainFrame frame = new MainFrame(rdw, 1024, 768);
 			rdw.setParentWindow(frame);
 			// frame.setAlwaysOnTop(true);
@@ -128,8 +128,10 @@ public class RdwGameEngine extends Game {
 		}
 	}
 
-	public RdwGameEngine(int width, int height) {
+	public RdwGameEngine(int width, int height, GameController controller) {
 		super(60, width, height);
+		this.controller = controller;
+		this.controller.startMessageReceiver();
 	}
 
 	/**
@@ -162,9 +164,7 @@ public class RdwGameEngine extends Game {
 
 		// additionals
 		if (keyc) {
-			if (characterFrame == null)
-				characterFrame = new ChildCharacterFrame(parentWindow,
-						"Charakterblatt");
+			ChildCharacterFrame characterFrame = controller.getCharacterFrame(parentWindow);
 			characterFrame.setVisible(!characterFrame.isVisible());
 			keyc = false;
 			this.requestFocus();
@@ -181,6 +181,10 @@ public class RdwGameEngine extends Game {
 			keydown = true;
 		if (keyCode == KeyEvent.VK_CONTROL)
 			keyctrl = true;
+		if (keyCode == KeyEvent.VK_LEFT)
+			keyleft = true;
+		if (keyCode == KeyEvent.VK_RIGHT)
+			keyright = true;
 
 	}
 
@@ -194,11 +198,9 @@ public class RdwGameEngine extends Game {
 			keydown = false;
 
 		if (keyCode == KeyEvent.VK_LEFT)
-			keyleft = true;
-		;
-
+			keyleft = false;
 		if (keyCode == KeyEvent.VK_RIGHT)
-			keyright = true;
+			keyright = false;
 
 		if (keyCode == KeyEvent.VK_CONTROL)
 			keyctrl = false;
@@ -319,6 +321,8 @@ public class RdwGameEngine extends Game {
 		double vely = calcAngleMoveY(avatar.moveAngle()) * speed;
 		avatar.setVelocity(new Point2D(velx, vely));
 
+		if (speed != 0)
+			controller.sendNewMessage("AVATAR:"+avatar.position().X()+":"+avatar.position().Y()+":"+avatar.faceAngle());
 	}
 
 	/**
@@ -349,61 +353,37 @@ public class RdwGameEngine extends Game {
 		barImage[1] = new ImageEntity(this);
 		barImage[1].load("/resource/sprites/bar_shield.png");
 
-		ImageEntity shipImage = new ImageEntity(this);
-		shipImage.load("/resource/sprites/horse_walking_south.png");
-
 		ImageEntity castleImage = new ImageEntity(this);
 		castleImage.load("/resource/sprites/castle.gif");
 
-		/*
-		 * AnimatedSprite ship = new AnimatedSprite(this, graphics());
-		 * ship.setSpriteType(RdwGameEngine.SPRITE_AVATAR);
-		 * ship.setAnimImage(shipImage.getImage()); ship.setFrameWidth(144);
-		 * ship.setFrameHeight(144); ship.setTotalFrames(12);
-		 * ship.setColumns(12); ship.setPosition(new Point2D(200, 200));
-		 * ship.setAlive(true); ship.setFrameDelay(4); sprites().add(ship);
-		 */
-
-		ImageEntity ships = new ImageEntity(this);
-		ships.load("/resource/sequences/walking_s0000.png");
-
-		DirectionalAnimatedSprite ship = new DirectionalAnimatedSprite(this,
+		DirectionalAnimatedSprite player_avatar = new DirectionalAnimatedSprite(this,
 				graphics());
-		ship.setSpriteType(RdwGameEngine.SPRITE_AVATAR);
-		ship.setAnimImage(ships.getImage());
-		ship.setFrameWidth(144);
-		ship.setFrameHeight(144);
-		ship.setTotalFrames(12);
-		ship.setColumns(12);
-		ship.setPosition(new Point2D(200, 200));
-		ship.setAlive(true);
-		ship.setFrameDelay(4);
-
-		ship.loadImageSequence("/resource/sequences/walking_n0000.png", 180);
-		// ship.loadImageSequence("/resource/sequences/walking_ne0000.png",
-		// 225);
-		// ship.loadImageSequence("/resource/sequences/walking_nw0000.png",
-		// 135);
-		ship.loadImageSequence("/resource/sequences/walking_s0000.png", 0);
-		// ship.loadImageSequence("/resource/sequences/walking_se0000.png",
-		// 315);
-		// ship.loadImageSequence("/resource/sequences/walking_sw0000.png", 45);
-		ship.loadImageSequence("/resource/sequences/walking_e0000.png", 270);
-		ship.loadImageSequence("/resource/sequences/walking_w0000.png", 90);
-
-		sprites().add(ship);
+		player_avatar.setSpriteType(RdwGameEngine.SPRITE_AVATAR);
+		player_avatar.setFrameWidth(144);
+		player_avatar.setFrameHeight(144);
+		player_avatar.setTotalFrames(12);
+		player_avatar.setColumns(12);
+		player_avatar.setPosition(new Point2D(200, 200));
+		player_avatar.setAlive(true);
+		player_avatar.setFrameDelay(4);
+		player_avatar.loadImageSequence("/resource/sequences/walking_n0000.png", 180);
+		player_avatar.loadImageSequence("/resource/sequences/walking_s0000.png", 0);
+		player_avatar.loadImageSequence("/resource/sequences/walking_e0000.png", 270);
+		player_avatar.loadImageSequence("/resource/sequences/walking_w0000.png", 90);
+		player_avatar.set4ImageMapping();
+		sprites().add(player_avatar);
 
 		AnimatedSprite castle = new AnimatedSprite(this, graphics());
 		castle.setSpriteType(RdwGameEngine.SPRITE_STATIC_OBJECT);
 		castle.setImage(castleImage.getImage());
-		castle.setPosition(new Point2D(738 * 2, 888 * 2));
+		castle.setPosition(new Point2D(50,50));
 		castle.setAlive(true);
 		sprites().add(castle);
 
 		AnimatedSprite castle2 = new AnimatedSprite(this, graphics());
 		castle2.setSpriteType(RdwGameEngine.SPRITE_STATIC_OBJECT);
 		castle2.setImage(castleImage.getImage());
-		castle2.setPosition(new Point2D(838 * 2, 988 * 2));
+		castle2.setPosition(new Point2D(300,450));
 		castle2.setAlive(true);
 		sprites().add(castle2);
 		resumeGame();
