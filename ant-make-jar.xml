@@ -31,6 +31,22 @@
 		</ftp>
 	</target>
 
+	<target name="deploy_server" depends="server">
+		<ftp server="athen062.server4you.de" userid="firegate666" password="66igamsm" remotedir="rdw">
+			<fileset dir="deploy">
+      			<include name="rdw_server.jar"/>
+    		</fileset>
+		</ftp>
+	</target>
+
+	<target name="deploy_server_libs">
+		<ftp server="athen062.server4you.de" userid="firegate666" password="66igamsm" remotedir="rdw">
+			<fileset dir="lib">
+      			<include name="*"/>
+    		</fileset>
+		</ftp>
+	</target>
+
 	<target name="deploy_simple_client" depends="simple_client">
 		<ftp server="firegate.de" userid="web1" password="66igamsm" remotedir="public_html/rdw">
 			<fileset dir="deploy">
@@ -74,10 +90,16 @@
 		<genkey alias="rnp_mbehnke" storepass="passwort" keystore="./keystore" dname="CN=Marco Behnke, OU=Softwaretechnik, O=behnke.biz, C=DE"/>
 	</target>
 
-	<target name="server" depends="init">
-		<!--jar 	destfile="C:\temp\rdw\rdw_server.jar"
+	<target name="server">
+		<jar 	destfile="deploy/rdw_server.jar"
 				baseDir="./bin/"
-				manifest="./MANIFEST_SERVER.MF"/-->
+				manifest="./MANIFEST_SERVER.MF"
+				excludes="**/resource/**"/>
+		<signjar alias="rnp_mbehnke" storepass="passwort" keystore="./keystore">
+			<fileset dir="deploy">
+			    <include name="rdw_server.jar"/>
+			</fileset>
+		</signjar>
 	</target>
 
 	<target name="client">
