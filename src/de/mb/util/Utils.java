@@ -8,6 +8,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Calendar;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 
@@ -19,6 +22,18 @@ import org.apache.log4j.Logger;
  */
 public class Utils {
 	final static Logger log = Logger.getLogger(Utils.class);
+
+	public static Properties readProperties(String resourcename) {
+		Properties applicationProperties = new Properties();
+		ResourceBundle resourceBundle = ResourceBundle
+				.getBundle(resourcename);
+		Enumeration enumi = resourceBundle.getKeys();
+		while (enumi.hasMoreElements()) {
+			String key = (String) enumi.nextElement();
+			applicationProperties.put(key, resourceBundle.getObject(key));
+		}
+		return applicationProperties;
+	}
 
 	public static String getExtension(File f) {
 		String ext = null;
