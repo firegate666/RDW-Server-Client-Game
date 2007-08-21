@@ -14,9 +14,9 @@ import org.apache.log4j.Logger;
  *
  * @author Marco Behnke & Nur Jawad
  */
-public class IncomingMessageThread implements Runnable {
+public class UDPIncomingHandler implements Runnable {
 
-	final static Logger log = Logger.getLogger(IncomingMessageThread.class);
+	final static Logger log = Logger.getLogger(UDPIncomingHandler.class);
 	/**
 	 * Socket listening for incoming messages
 	 */
@@ -37,7 +37,7 @@ public class IncomingMessageThread implements Runnable {
 	 *
 	 * @param app chat client application
 	 */
-	public IncomingMessageThread(String myip, int port, GameServer server) {
+	public UDPIncomingHandler(String myip, int port, GameServer server) {
 		_myip = myip;
 		this.port = port;
 		this.server = server;
