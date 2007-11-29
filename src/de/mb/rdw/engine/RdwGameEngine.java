@@ -17,7 +17,6 @@ import com.sun.j3d.utils.applet.MainFrame;
 
 import de.mb.rdw.GameController;
 import de.mb.rdw.swing.ChildCharacterFrame;
-import de.mb.rdw.swing.ChildFrame;
 import de.mb.util.WebstartFileProvider;
 
 /**
