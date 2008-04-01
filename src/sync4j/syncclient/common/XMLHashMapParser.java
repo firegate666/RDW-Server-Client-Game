@@ -46,7 +46,7 @@ import java.util.Vector;
  *
  * <p>The null values are represent by <code>NULL_VALUE</code>
  *
- * @version  $Id: XMLHashMapParser.java,v 1.2 2007-08-07 00:41:13 root Exp $
+ * @version  $Id: XMLHashMapParser.java,v 1.3 2008-04-01 22:41:04 firegate666 Exp $
  * @author Stefano Nichele
  */
 
